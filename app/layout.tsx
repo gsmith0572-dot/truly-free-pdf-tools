@@ -46,6 +46,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareAppSchema) }}
         />
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8680464039127093"
+          crossOrigin="anonymous"
+        />
       </head>
       <body>
         <Navbar />
