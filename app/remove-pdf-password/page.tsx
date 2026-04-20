@@ -2,13 +2,63 @@ import type { Metadata } from "next";
 import RemovePasswordTool from "@/components/tools/RemovePasswordTool";
 
 export const metadata: Metadata = {
-  title: "Remove PDF Password Free — No Signup | TrulyFree Tools",
-  description: "Remove password protection from PDF files instantly. Free, no email required. Files never leave your browser.",
+  title: "Remove PDF Password Free — No Limits, No Signup, 100% Client-Side | TrulyFree Tools",
+  description: "Process your PDF files locally. Remove PDF password protection instantly — no uploads, no subscriptions, no credit card ever.",
+  alternates: { canonical: "https://trulyfreetools.com/remove-pdf-password" },
+  openGraph: {
+    title: "Remove PDF Password Free — No Limits, No Signup",
+    description: "Unlock PDF files locally in your browser. No watermarks. No email. No limits.",
+    url: "https://trulyfreetools.com/remove-pdf-password",
+    type: "website",
+  },
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Can I remove a PDF password for free without signing up?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. No account, no email, no signup. Upload your PDF and remove the password restriction instantly."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why does it not ask for a credit card?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Because we never charge you. TrulyFree PDF Tools is monetized by non-intrusive ads only. No account required."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Where are my files processed when unlocking?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Entirely in your browser using WebAssembly. Your files are never uploaded to any server. They never leave your device."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What type of PDF protection does this remove?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "This tool removes owner-level restrictions such as printing, copying, and editing locks from PDFs that use standard permission-based protection."
+      }
+    }
+  ]
 };
 
 export default function RemovePasswordPage() {
   return (
     <main style={{ minHeight: "100vh", background: "#f7fafc", padding: "60px 24px" }}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
       <div style={{ maxWidth: 720, margin: "0 auto" }}>
         <div style={{ marginBottom: 40, textAlign: "center" }}>
           <span style={{

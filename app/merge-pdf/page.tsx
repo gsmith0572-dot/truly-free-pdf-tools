@@ -2,13 +2,63 @@ import type { Metadata } from "next";
 import MergePDFTool from "@/components/tools/MergePDFTool";
 
 export const metadata: Metadata = {
-  title: "Merge PDF Free — No Signup, No Watermark | TrulyFree Tools",
-  description: "Combine multiple PDF files into one. Free, no watermark, no email required. Files never leave your browser.",
+  title: "Merge PDF Free — No Limits, No Signup, 100% Client-Side | TrulyFree Tools",
+  description: "Process your PDF files locally. Combine multiple PDFs into one — no uploads, no subscriptions, no credit card ever.",
+  alternates: { canonical: "https://trulyfreetools.com/merge-pdf" },
+  openGraph: {
+    title: "Merge PDF Free — No Limits, No Signup",
+    description: "Merge PDF files locally in your browser. No watermarks. No email. No limits.",
+    url: "https://trulyfreetools.com/merge-pdf",
+    type: "website",
+  },
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is this PDF merger really free with no watermark?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, completely free with no watermarks, no signup, and no limits on how many PDFs you can merge."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why does it not ask for a credit card?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Because we never charge you. TrulyFree PDF Tools is monetized by non-intrusive ads only. No account required."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Where are my files processed when merging?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Entirely in your browser using WebAssembly. Your files are never uploaded to any server. They never leave your device."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How many PDF files can I merge at once?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "There is no limit on the number of files. All processing is local so the only constraint is your device memory."
+      }
+    }
+  ]
 };
 
 export default function MergePDFPage() {
   return (
     <main style={{ minHeight: "100vh", background: "#f7fafc", padding: "60px 24px" }}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
       <div style={{ maxWidth: 720, margin: "0 auto" }}>
         <div style={{ marginBottom: 40, textAlign: "center" }}>
           <span style={{
