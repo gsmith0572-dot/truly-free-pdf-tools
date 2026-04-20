@@ -17,7 +17,6 @@ function formatBytes(bytes: number): string {
 
 export default function RemovePasswordTool() {
   const [fileState, setFileState] = useState<FileState | null>(null);
-  const [password, setPassword] = useState("");
   const [processing, setProcessing] = useState(false);
   const [resultBlob, setResultBlob] = useState<Blob | null>(null);
   const [dragging, setDragging] = useState(false);
@@ -48,8 +47,7 @@ export default function RemovePasswordTool() {
     try {
       const buf = await fileState.file.arrayBuffer();
       const doc = await PDFDocument.load(buf, {
-        password: password || undefined,
-        ignoreEncryption: false,
+        ignoreEncryption: true,
       });
       const unlocked = await PDFDocument.create();
       const pages = await unlocked.copyPages(doc, doc.getPageIndices());
@@ -78,7 +76,6 @@ export default function RemovePasswordTool() {
     setFileState(null);
     setResultBlob(null);
     setError(null);
-    setPassword("");
     if (inputRef.current) inputRef.current.value = "";
   };
 
@@ -131,28 +128,6 @@ export default function RemovePasswordTool() {
               </div>
             </div>
             <button onClick={reset} style={{ color: "#718096", fontSize: 12, background: "none", border: "none", cursor: "pointer", padding: 4 }}>Remove</button>
-          </div>
-
-          <div style={{ marginBottom: 20 }}>
-            <p style={{ color: "#4a5568", fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 8 }}>
-              PDF Password
-            </p>
-            <input
-              type="password"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              onKeyDown={e => { if (e.key === "Enter") unlock(); }}
-              placeholder="Enter PDF password"
-              style={{
-                width: "100%", padding: "10px 12px", borderRadius: 6,
-                border: "1.5px solid rgba(74,85,104,0.2)",
-                background: "#f7fafc", color: "#181c1e", fontSize: 14,
-                outline: "none", boxSizing: "border-box",
-              }}
-            />
-            <p style={{ color: "#718096", fontSize: 12, marginTop: 6 }}>
-              Leave blank if the PDF has owner restrictions only.
-            </p>
           </div>
 
           <button
