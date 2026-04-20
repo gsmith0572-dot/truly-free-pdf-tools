@@ -205,7 +205,7 @@ export default function HomePage() {
           TrulyFree PDF Tools — Part of the{" "}
           <span style={{ color: "#0058c3", fontWeight: 600 }}>Truly Free</span>{" "}
           ecosystem. Built by{" "}
-          <a href="https://www.klickifyagency.com" target="_blank" rel="noopener noreferrer" style={{ color: "#0058c3", fontWeight: 600, textDecoration: "none" }}>
+          <a href="https://klickifyagency.com/" target="_blank" rel="noopener noreferrer" style={{ color: "#0058c3", fontWeight: 600, textDecoration: "none" }}>
             Klickify Agency
           </a>
           .
