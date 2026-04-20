@@ -92,7 +92,7 @@ export default function CompressPDFTool() {
         useObjectStreams: true,
         addDefaultPage: false,
       });
-      const blob = new Blob([compressed], { type: "application/pdf" });
+      const blob = new Blob([compressed.buffer as ArrayBuffer], { type: "application/pdf" });
       setResult({
         blob,
         compressedSize: blob.size,
