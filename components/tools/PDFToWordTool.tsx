@@ -122,7 +122,7 @@ function textToDocx(text: string, filename: string): Blob {
     { name: "word/document.xml", data: docBytes },
   ]);
 
-  return new Blob([zipBytes], { type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" });
+  return new Blob([zipBytes.buffer as ArrayBuffer], { type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" });
 }
 
 export default function PDFToWordTool() {
