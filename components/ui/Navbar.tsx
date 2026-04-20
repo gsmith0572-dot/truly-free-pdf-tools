@@ -33,8 +33,8 @@ export default function Navbar() {
           <Image
             src="/logo.png"
             alt="TrulyFree PDF Tools"
-            width={160}
-            height={40}
+            width={180}
+            height={48}
             style={{ objectFit: "contain" }}
             priority
           />
