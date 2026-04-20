@@ -116,10 +116,23 @@ export default function Page() {
             Frequently Asked Questions
           </h2>
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-                        <div style={{{{ background: "#ffffff", borderRadius: 8, padding: "20px 24px", boxShadow: "0px 8px 24px rgba(24,28,30,0.06)" }}}}>\n              <p style={{{{ color: "#181c1e", fontWeight: 700, fontSize: 14, marginBottom: 8 }}}}>What is the main difference between this and ILovePDF?</p>\n              <p style={{{{ color: "#4a5568", fontSize: 14, lineHeight: 1.6 }}}}>ILovePDF limits free users to 2 tasks per day and requires a paid plan for unlimited access. TrulyFree PDF Tools has no daily limits and is free forever.</p>\n            </div>
-            <div style={{{{ background: "#ffffff", borderRadius: 8, padding: "20px 24px", boxShadow: "0px 8px 24px rgba(24,28,30,0.06)" }}}}>\n              <p style={{{{ color: "#181c1e", fontWeight: 700, fontSize: 14, marginBottom: 8 }}}}>Does this alternative work the same as ILovePDF?</p>\n              <p style={{{{ color: "#4a5568", fontSize: 14, lineHeight: 1.6 }}}}>Yes. It covers the same core use cases: compress, merge, split, convert to Word, and remove passwords — with no limitations.</p>\n            </div>
-            <div style={{{{ background: "#ffffff", borderRadius: 8, padding: "20px 24px", boxShadow: "0px 8px 24px rgba(24,28,30,0.06)" }}}}>\n              <p style={{{{ color: "#181c1e", fontWeight: 700, fontSize: 14, marginBottom: 8 }}}}>Does this tool upload files to a server like ILovePDF?</p>\n              <p style={{{{ color: "#4a5568", fontSize: 14, lineHeight: 1.6 }}}}>No. ILovePDF processes files on cloud servers. TrulyFree PDF Tools runs entirely in your browser via WebAssembly — zero uploads.</p>\n            </div>
-            <div style={{{{ background: "#ffffff", borderRadius: 8, padding: "20px 24px", boxShadow: "0px 8px 24px rgba(24,28,30,0.06)" }}}}>\n              <p style={{{{ color: "#181c1e", fontWeight: 700, fontSize: 14, marginBottom: 8 }}}}>Is there any cost at all?</p>\n              <p style={{{{ color: "#4a5568", fontSize: 14, lineHeight: 1.6 }}}}>No. Free forever. Funded by non-intrusive ads. No subscription, no account, no watermarks.</p>\n            </div>
+            
+            <div style={{ background: "#ffffff", borderRadius: 8, padding: "20px 24px", boxShadow: "0px 8px 24px rgba(24,28,30,0.06)" }}>
+              <p style={{ color: "#181c1e", fontWeight: 700, fontSize: 14, marginBottom: 8 }}>What is the main difference between this and ILovePDF?</p>
+              <p style={{ color: "#4a5568", fontSize: 14, lineHeight: 1.6 }}>ILovePDF limits free users to 2 tasks per day and requires a paid plan for unlimited access. TrulyFree PDF Tools has no daily limits and is free forever.</p>
+            </div>
+            <div style={{ background: "#ffffff", borderRadius: 8, padding: "20px 24px", boxShadow: "0px 8px 24px rgba(24,28,30,0.06)" }}>
+              <p style={{ color: "#181c1e", fontWeight: 700, fontSize: 14, marginBottom: 8 }}>Does this alternative work the same as ILovePDF?</p>
+              <p style={{ color: "#4a5568", fontSize: 14, lineHeight: 1.6 }}>Yes. It covers the same core use cases: compress, merge, split, convert to Word, and remove passwords — with no limitations.</p>
+            </div>
+            <div style={{ background: "#ffffff", borderRadius: 8, padding: "20px 24px", boxShadow: "0px 8px 24px rgba(24,28,30,0.06)" }}>
+              <p style={{ color: "#181c1e", fontWeight: 700, fontSize: 14, marginBottom: 8 }}>Does this tool upload files to a server like ILovePDF?</p>
+              <p style={{ color: "#4a5568", fontSize: 14, lineHeight: 1.6 }}>No. ILovePDF processes files on cloud servers. TrulyFree PDF Tools runs entirely in your browser via WebAssembly — zero uploads.</p>
+            </div>
+            <div style={{ background: "#ffffff", borderRadius: 8, padding: "20px 24px", boxShadow: "0px 8px 24px rgba(24,28,30,0.06)" }}>
+              <p style={{ color: "#181c1e", fontWeight: 700, fontSize: 14, marginBottom: 8 }}>Is there any cost at all?</p>
+              <p style={{ color: "#4a5568", fontSize: 14, lineHeight: 1.6 }}>No. Free forever. Funded by non-intrusive ads. No subscription, no account, no watermarks.</p>
+            </div>
           </div>
         </div>
 

@@ -116,10 +116,23 @@ export default function Page() {
             Frequently Asked Questions
           </h2>
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-                        <div style={{{{ background: "#ffffff", borderRadius: 8, padding: "20px 24px", boxShadow: "0px 8px 24px rgba(24,28,30,0.06)" }}}}>\n              <p style={{{{ color: "#181c1e", fontWeight: 700, fontSize: 14, marginBottom: 8 }}}}>Can I convert PDF to Word without giving my email?</p>\n              <p style={{{{ color: "#4a5568", fontSize: 14, lineHeight: 1.6 }}}}>Yes. No email, no account, no signup. Just upload and convert.</p>\n            </div>
-            <div style={{{{ background: "#ffffff", borderRadius: 8, padding: "20px 24px", boxShadow: "0px 8px 24px rgba(24,28,30,0.06)" }}}}>\n              <p style={{{{ color: "#181c1e", fontWeight: 700, fontSize: 14, marginBottom: 8 }}}}>Does the converted Word file have watermarks?</p>\n              <p style={{{{ color: "#4a5568", fontSize: 14, lineHeight: 1.6 }}}}>Never. Your converted .docx file is clean — no watermarks, no branding.</p>\n            </div>
-            <div style={{{{ background: "#ffffff", borderRadius: 8, padding: "20px 24px", boxShadow: "0px 8px 24px rgba(24,28,30,0.06)" }}}}>\n              <p style={{{{ color: "#181c1e", fontWeight: 700, fontSize: 14, marginBottom: 8 }}}}>Does this work with scanned PDFs?</p>\n              <p style={{{{ color: "#4a5568", fontSize: 14, lineHeight: 1.6 }}}}>No. This tool works with text-based PDFs only. Scanned or image-based PDFs are not supported as OCR cannot run client-side.</p>\n            </div>
-            <div style={{{{ background: "#ffffff", borderRadius: 8, padding: "20px 24px", boxShadow: "0px 8px 24px rgba(24,28,30,0.06)" }}}}>\n              <p style={{{{ color: "#181c1e", fontWeight: 700, fontSize: 14, marginBottom: 8 }}}}>Where is the conversion processed?</p>\n              <p style={{{{ color: "#4a5568", fontSize: 14, lineHeight: 1.6 }}}}>Entirely in your browser. Your PDF is never uploaded to any server.</p>\n            </div>
+            
+            <div style={{ background: "#ffffff", borderRadius: 8, padding: "20px 24px", boxShadow: "0px 8px 24px rgba(24,28,30,0.06)" }}>
+              <p style={{ color: "#181c1e", fontWeight: 700, fontSize: 14, marginBottom: 8 }}>Can I convert PDF to Word without giving my email?</p>
+              <p style={{ color: "#4a5568", fontSize: 14, lineHeight: 1.6 }}>Yes. No email, no account, no signup. Just upload and convert.</p>
+            </div>
+            <div style={{ background: "#ffffff", borderRadius: 8, padding: "20px 24px", boxShadow: "0px 8px 24px rgba(24,28,30,0.06)" }}>
+              <p style={{ color: "#181c1e", fontWeight: 700, fontSize: 14, marginBottom: 8 }}>Does the converted Word file have watermarks?</p>
+              <p style={{ color: "#4a5568", fontSize: 14, lineHeight: 1.6 }}>Never. Your converted .docx file is clean — no watermarks, no branding.</p>
+            </div>
+            <div style={{ background: "#ffffff", borderRadius: 8, padding: "20px 24px", boxShadow: "0px 8px 24px rgba(24,28,30,0.06)" }}>
+              <p style={{ color: "#181c1e", fontWeight: 700, fontSize: 14, marginBottom: 8 }}>Does this work with scanned PDFs?</p>
+              <p style={{ color: "#4a5568", fontSize: 14, lineHeight: 1.6 }}>No. This tool works with text-based PDFs only. Scanned or image-based PDFs are not supported as OCR cannot run client-side.</p>
+            </div>
+            <div style={{ background: "#ffffff", borderRadius: 8, padding: "20px 24px", boxShadow: "0px 8px 24px rgba(24,28,30,0.06)" }}>
+              <p style={{ color: "#181c1e", fontWeight: 700, fontSize: 14, marginBottom: 8 }}>Where is the conversion processed?</p>
+              <p style={{ color: "#4a5568", fontSize: 14, lineHeight: 1.6 }}>Entirely in your browser. Your PDF is never uploaded to any server.</p>
+            </div>
           </div>
         </div>
 

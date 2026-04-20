@@ -116,10 +116,23 @@ export default function Page() {
             Frequently Asked Questions
           </h2>
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-                        <div style={{{{ background: "#ffffff", borderRadius: 8, padding: "20px 24px", boxShadow: "0px 8px 24px rgba(24,28,30,0.06)" }}}}>\n              <p style={{{{ color: "#181c1e", fontWeight: 700, fontSize: 14, marginBottom: 8 }}}}>Can I split a PDF without creating an account?</p>\n              <p style={{{{ color: "#4a5568", fontSize: 14, lineHeight: 1.6 }}}}>Yes. No account, no email, no signup of any kind. Upload your PDF and split it in seconds.</p>\n            </div>
-            <div style={{{{ background: "#ffffff", borderRadius: 8, padding: "20px 24px", boxShadow: "0px 8px 24px rgba(24,28,30,0.06)" }}}}>\n              <p style={{{{ color: "#181c1e", fontWeight: 700, fontSize: 14, marginBottom: 8 }}}}>Can I extract specific pages instead of splitting all?</p>\n              <p style={{{{ color: "#4a5568", fontSize: 14, lineHeight: 1.6 }}}}>Yes. Use custom range mode to define exactly which pages you want — for example 1-3, 5, 7-9. Each range becomes a separate PDF.</p>\n            </div>
-            <div style={{{{ background: "#ffffff", borderRadius: 8, padding: "20px 24px", boxShadow: "0px 8px 24px rgba(24,28,30,0.06)" }}}}>\n              <p style={{{{ color: "#181c1e", fontWeight: 700, fontSize: 14, marginBottom: 8 }}}}>Where are my files processed?</p>\n              <p style={{{{ color: "#4a5568", fontSize: 14, lineHeight: 1.6 }}}}>Entirely in your browser. Your PDF is never uploaded to any server.</p>\n            </div>
-            <div style={{{{ background: "#ffffff", borderRadius: 8, padding: "20px 24px", boxShadow: "0px 8px 24px rgba(24,28,30,0.06)" }}}}>\n              <p style={{{{ color: "#181c1e", fontWeight: 700, fontSize: 14, marginBottom: 8 }}}}>Is there a page count limit?</p>\n              <p style={{{{ color: "#4a5568", fontSize: 14, lineHeight: 1.6 }}}}>No. Split PDFs with any number of pages — no limits imposed.</p>\n            </div>
+            
+            <div style={{ background: "#ffffff", borderRadius: 8, padding: "20px 24px", boxShadow: "0px 8px 24px rgba(24,28,30,0.06)" }}>
+              <p style={{ color: "#181c1e", fontWeight: 700, fontSize: 14, marginBottom: 8 }}>Can I split a PDF without creating an account?</p>
+              <p style={{ color: "#4a5568", fontSize: 14, lineHeight: 1.6 }}>Yes. No account, no email, no signup of any kind. Upload your PDF and split it in seconds.</p>
+            </div>
+            <div style={{ background: "#ffffff", borderRadius: 8, padding: "20px 24px", boxShadow: "0px 8px 24px rgba(24,28,30,0.06)" }}>
+              <p style={{ color: "#181c1e", fontWeight: 700, fontSize: 14, marginBottom: 8 }}>Can I extract specific pages instead of splitting all?</p>
+              <p style={{ color: "#4a5568", fontSize: 14, lineHeight: 1.6 }}>Yes. Use custom range mode to define exactly which pages you want — for example 1-3, 5, 7-9. Each range becomes a separate PDF.</p>
+            </div>
+            <div style={{ background: "#ffffff", borderRadius: 8, padding: "20px 24px", boxShadow: "0px 8px 24px rgba(24,28,30,0.06)" }}>
+              <p style={{ color: "#181c1e", fontWeight: 700, fontSize: 14, marginBottom: 8 }}>Where are my files processed?</p>
+              <p style={{ color: "#4a5568", fontSize: 14, lineHeight: 1.6 }}>Entirely in your browser. Your PDF is never uploaded to any server.</p>
+            </div>
+            <div style={{ background: "#ffffff", borderRadius: 8, padding: "20px 24px", boxShadow: "0px 8px 24px rgba(24,28,30,0.06)" }}>
+              <p style={{ color: "#181c1e", fontWeight: 700, fontSize: 14, marginBottom: 8 }}>Is there a page count limit?</p>
+              <p style={{ color: "#4a5568", fontSize: 14, lineHeight: 1.6 }}>No. Split PDFs with any number of pages — no limits imposed.</p>
+            </div>
           </div>
         </div>
 

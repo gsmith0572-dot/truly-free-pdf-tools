@@ -116,10 +116,23 @@ export default function Page() {
             Frequently Asked Questions
           </h2>
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-                        <div style={{{{ background: "#ffffff", borderRadius: 8, padding: "20px 24px", boxShadow: "0px 8px 24px rgba(24,28,30,0.06)" }}}}>\n              <p style={{{{ color: "#181c1e", fontWeight: 700, fontSize: 14, marginBottom: 8 }}}}>What is the main difference between this and Smallpdf?</p>\n              <p style={{{{ color: "#4a5568", fontSize: 14, lineHeight: 1.6 }}}}>Smallpdf limits free users to 2 tasks per day and charges $144/year for unlimited access. TrulyFree PDF Tools is unlimited and free forever.</p>\n            </div>
-            <div style={{{{ background: "#ffffff", borderRadius: 8, padding: "20px 24px", boxShadow: "0px 8px 24px rgba(24,28,30,0.06)" }}}}>\n              <p style={{{{ color: "#181c1e", fontWeight: 700, fontSize: 14, marginBottom: 8 }}}}>Does this alternative have the same tools as Smallpdf?</p>\n              <p style={{{{ color: "#4a5568", fontSize: 14, lineHeight: 1.6 }}}}>Yes. Compress, Merge, Split, PDF to Word, and Remove Password — the core toolkit that covers 95% of everyday PDF needs.</p>\n            </div>
-            <div style={{{{ background: "#ffffff", borderRadius: 8, padding: "20px 24px", boxShadow: "0px 8px 24px rgba(24,28,30,0.06)" }}}}>\n              <p style={{{{ color: "#181c1e", fontWeight: 700, fontSize: 14, marginBottom: 8 }}}}>Does this tool upload my files like Smallpdf does?</p>\n              <p style={{{{ color: "#4a5568", fontSize: 14, lineHeight: 1.6 }}}}>No. Unlike Smallpdf which processes files on their servers, TrulyFree PDF Tools runs entirely in your browser. Your files never leave your device.</p>\n            </div>
-            <div style={{{{ background: "#ffffff", borderRadius: 8, padding: "20px 24px", boxShadow: "0px 8px 24px rgba(24,28,30,0.06)" }}}}>\n              <p style={{{{ color: "#181c1e", fontWeight: 700, fontSize: 14, marginBottom: 8 }}}}>Is there a catch?</p>\n              <p style={{{{ color: "#4a5568", fontSize: 14, lineHeight: 1.6 }}}}>No catch. We are funded by non-intrusive ads. No subscription, no data selling, no watermarks, no daily caps.</p>\n            </div>
+            
+            <div style={{ background: "#ffffff", borderRadius: 8, padding: "20px 24px", boxShadow: "0px 8px 24px rgba(24,28,30,0.06)" }}>
+              <p style={{ color: "#181c1e", fontWeight: 700, fontSize: 14, marginBottom: 8 }}>What is the main difference between this and Smallpdf?</p>
+              <p style={{ color: "#4a5568", fontSize: 14, lineHeight: 1.6 }}>Smallpdf limits free users to 2 tasks per day and charges $144/year for unlimited access. TrulyFree PDF Tools is unlimited and free forever.</p>
+            </div>
+            <div style={{ background: "#ffffff", borderRadius: 8, padding: "20px 24px", boxShadow: "0px 8px 24px rgba(24,28,30,0.06)" }}>
+              <p style={{ color: "#181c1e", fontWeight: 700, fontSize: 14, marginBottom: 8 }}>Does this alternative have the same tools as Smallpdf?</p>
+              <p style={{ color: "#4a5568", fontSize: 14, lineHeight: 1.6 }}>Yes. Compress, Merge, Split, PDF to Word, and Remove Password — the core toolkit that covers 95% of everyday PDF needs.</p>
+            </div>
+            <div style={{ background: "#ffffff", borderRadius: 8, padding: "20px 24px", boxShadow: "0px 8px 24px rgba(24,28,30,0.06)" }}>
+              <p style={{ color: "#181c1e", fontWeight: 700, fontSize: 14, marginBottom: 8 }}>Does this tool upload my files like Smallpdf does?</p>
+              <p style={{ color: "#4a5568", fontSize: 14, lineHeight: 1.6 }}>No. Unlike Smallpdf which processes files on their servers, TrulyFree PDF Tools runs entirely in your browser. Your files never leave your device.</p>
+            </div>
+            <div style={{ background: "#ffffff", borderRadius: 8, padding: "20px 24px", boxShadow: "0px 8px 24px rgba(24,28,30,0.06)" }}>
+              <p style={{ color: "#181c1e", fontWeight: 700, fontSize: 14, marginBottom: 8 }}>Is there a catch?</p>
+              <p style={{ color: "#4a5568", fontSize: 14, lineHeight: 1.6 }}>No catch. We are funded by non-intrusive ads. No subscription, no data selling, no watermarks, no daily caps.</p>
+            </div>
           </div>
         </div>
 

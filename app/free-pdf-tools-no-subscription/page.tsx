@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Free PDF Tools No Subscription — Compress, Merge, Split & More",
+  title: "Free PDF Tools No Subscription — Compress, Merge, Split and More",
   description: "Complete PDF toolkit with no subscription, no signup, no watermarks. Compress, merge, split, convert and unlock PDFs free forever.",
   alternates: { canonical: "https://trulyfreetools.com/free-pdf-tools-no-subscription" },
   openGraph: {
-    title: "Free PDF Tools No Subscription — Compress, Merge, Split & More",
+    title: "Free PDF Tools No Subscription — Compress, Merge, Split and More",
     description: "Complete PDF toolkit with no subscription, no signup, no watermarks. Compress, merge, split, convert and unlock PDFs free forever.",
     url: "https://trulyfreetools.com/free-pdf-tools-no-subscription",
     type: "website",
@@ -116,10 +116,23 @@ export default function Page() {
             Frequently Asked Questions
           </h2>
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-                        <div style={{{{ background: "#ffffff", borderRadius: 8, padding: "20px 24px", boxShadow: "0px 8px 24px rgba(24,28,30,0.06)" }}}}>\n              <p style={{{{ color: "#181c1e", fontWeight: 700, fontSize: 14, marginBottom: 8 }}}}>Are these PDF tools really free with no subscription?</p>\n              <p style={{{{ color: "#4a5568", fontSize: 14, lineHeight: 1.6 }}}}>Yes. Free forever. Not a 14-day trial. Not 2 tasks per day. Unlimited use, zero cost, no credit card required.</p>\n            </div>
-            <div style={{{{ background: "#ffffff", borderRadius: 8, padding: "20px 24px", boxShadow: "0px 8px 24px rgba(24,28,30,0.06)" }}}}>\n              <p style={{{{ color: "#181c1e", fontWeight: 700, fontSize: 14, marginBottom: 8 }}}}>How do you offer this for free?</p>\n              <p style={{{{ color: "#4a5568", fontSize: 14, lineHeight: 1.6 }}}}>We are funded by non-intrusive display ads. No data is sold, no files are stored, no subscription is ever required.</p>\n            </div>
-            <div style={{{{ background: "#ffffff", borderRadius: 8, padding: "20px 24px", boxShadow: "0px 8px 24px rgba(24,28,30,0.06)" }}}}>\n              <p style={{{{ color: "#181c1e", fontWeight: 700, fontSize: 14, marginBottom: 8 }}}}>Why do Smallpdf and ILovePDF charge so much?</p>\n              <p style={{{{ color: "#4a5568", fontSize: 14, lineHeight: 1.6 }}}}>They process files on expensive cloud servers and use a bait-and-switch model — free for 2 tasks, then $111-$180/year. We eliminated the server cost by running everything locally.</p>\n            </div>
-            <div style={{{{ background: "#ffffff", borderRadius: 8, padding: "20px 24px", boxShadow: "0px 8px 24px rgba(24,28,30,0.06)" }}}}>\n              <p style={{{{ color: "#181c1e", fontWeight: 700, fontSize: 14, marginBottom: 8 }}}}>What tools are included?</p>\n              <p style={{{{ color: "#4a5568", fontSize: 14, lineHeight: 1.6 }}}}>Compress PDF, Merge PDF, Split PDF, PDF to Word, and Remove PDF Password — all free, all local, all unlimited.</p>\n            </div>
+            
+            <div style={{ background: "#ffffff", borderRadius: 8, padding: "20px 24px", boxShadow: "0px 8px 24px rgba(24,28,30,0.06)" }}>
+              <p style={{ color: "#181c1e", fontWeight: 700, fontSize: 14, marginBottom: 8 }}>Are these PDF tools really free with no subscription?</p>
+              <p style={{ color: "#4a5568", fontSize: 14, lineHeight: 1.6 }}>Yes. Free forever. Not a 14-day trial. Not 2 tasks per day. Unlimited use, zero cost, no credit card required.</p>
+            </div>
+            <div style={{ background: "#ffffff", borderRadius: 8, padding: "20px 24px", boxShadow: "0px 8px 24px rgba(24,28,30,0.06)" }}>
+              <p style={{ color: "#181c1e", fontWeight: 700, fontSize: 14, marginBottom: 8 }}>How do you offer this for free?</p>
+              <p style={{ color: "#4a5568", fontSize: 14, lineHeight: 1.6 }}>We are funded by non-intrusive display ads. No data is sold, no files are stored, no subscription is ever required.</p>
+            </div>
+            <div style={{ background: "#ffffff", borderRadius: 8, padding: "20px 24px", boxShadow: "0px 8px 24px rgba(24,28,30,0.06)" }}>
+              <p style={{ color: "#181c1e", fontWeight: 700, fontSize: 14, marginBottom: 8 }}>Why do Smallpdf and ILovePDF charge so much?</p>
+              <p style={{ color: "#4a5568", fontSize: 14, lineHeight: 1.6 }}>They process files on expensive cloud servers and use a bait-and-switch model — free for 2 tasks, then $111-$180/year. We eliminated the server cost by running everything locally.</p>
+            </div>
+            <div style={{ background: "#ffffff", borderRadius: 8, padding: "20px 24px", boxShadow: "0px 8px 24px rgba(24,28,30,0.06)" }}>
+              <p style={{ color: "#181c1e", fontWeight: 700, fontSize: 14, marginBottom: 8 }}>What tools are included?</p>
+              <p style={{ color: "#4a5568", fontSize: 14, lineHeight: 1.6 }}>Compress PDF, Merge PDF, Split PDF, PDF to Word, and Remove PDF Password — all free, all local, all unlimited.</p>
+            </div>
           </div>
         </div>
 
