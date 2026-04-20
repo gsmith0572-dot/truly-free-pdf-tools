@@ -1,5 +1,15 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
+
+const navLinks = [
+  { href: "/compress-pdf", label: "Compress" },
+  { href: "/merge-pdf", label: "Merge" },
+  { href: "/split-pdf", label: "Split" },
+  { href: "/pdf-to-word", label: "PDF to Word" },
+  { href: "/remove-pdf-password", label: "Unlock" },
+];
 
 export default function Navbar() {
   return (
@@ -30,13 +40,7 @@ export default function Navbar() {
           />
         </Link>
         <nav style={{ display: "flex", alignItems: "center", gap: 4 }}>
-          {[
-            { href: "/compress-pdf", label: "Compress" },
-            { href: "/merge-pdf", label: "Merge" },
-            { href: "/split-pdf", label: "Split" },
-            { href: "/pdf-to-word", label: "PDF to Word" },
-            { href: "/remove-pdf-password", label: "Unlock" },
-          ].map((item) => (
+          {navLinks.map((item) => (
             <Link
               key={item.href}
               href={item.href}
@@ -47,15 +51,6 @@ export default function Navbar() {
                 textDecoration: "none",
                 padding: "6px 10px",
                 borderRadius: 6,
-                transition: "background 0.1s ease, color 0.1s ease",
-              }}
-              onMouseEnter={e => {
-                (e.target as HTMLAnchorElement).style.background = "rgba(0,88,195,0.07)";
-                (e.target as HTMLAnchorElement).style.color = "#0058c3";
-              }}
-              onMouseLeave={e => {
-                (e.target as HTMLAnchorElement).style.background = "transparent";
-                (e.target as HTMLAnchorElement).style.color = "#4a5568";
               }}
             >
               {item.label}
