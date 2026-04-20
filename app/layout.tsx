@@ -1,6 +1,7 @@
-import type { Metadata } from "next";
-import "./globals.css";
-import Navbar from "@/components/ui/Navbar";
+import type { Metadata } from "next"
+import "./globals.css"
+import Navbar from "@/components/ui/Navbar"
+import Footer from "@/components/ui/Footer"
 
 export const metadata: Metadata = {
   title: "TrulyFree PDF Tools — Free PDF Compressor, Merger & More",
@@ -19,7 +20,7 @@ export const metadata: Metadata = {
     title: "TrulyFree PDF Tools",
     description: "Free PDF tools with zero limits. No signup. No watermarks. Process locally.",
   },
-};
+}
 
 const softwareAppSchema = {
   "@context": "https://schema.org",
@@ -35,13 +36,9 @@ const softwareAppSchema = {
   },
   "description": "Free PDF tools that run entirely in your browser. No signup, no watermarks, no file uploads to servers.",
   "featureList": "Compress PDF, Merge PDF, Split PDF, PDF to Word, Remove PDF Password"
-};
+}
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <head>
@@ -53,7 +50,8 @@ export default function RootLayout({
       <body>
         <Navbar />
         {children}
+        <Footer />
       </body>
     </html>
-  );
+  )
 }
