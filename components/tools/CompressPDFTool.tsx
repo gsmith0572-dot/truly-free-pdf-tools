@@ -2,6 +2,7 @@
 
 import { useState, useRef, useCallback } from "react";
 import { PDFDocument } from "pdf-lib";
+import AdSlot from "@/components/ads/AdSlot";
 
 type CompressionLevel = "low" | "medium" | "high";
 
@@ -77,9 +78,7 @@ export default function CompressPDFTool() {
     setError(null);
     try {
       const arrayBuffer = await fileState.file.arrayBuffer();
-      const pdfDoc = await PDFDocument.load(arrayBuffer, {
-        ignoreEncryption: true,
-      });
+      const pdfDoc = await PDFDocument.load(arrayBuffer, { ignoreEncryption: true });
       const pages = pdfDoc.getPages();
       const scale = COMPRESSION_SCALE[level];
       for (const page of pages) {
@@ -88,16 +87,9 @@ export default function CompressPDFTool() {
         page.scaleContent(scale, scale);
         page.setSize(width, height);
       }
-      const compressed = await pdfDoc.save({
-        useObjectStreams: true,
-        addDefaultPage: false,
-      });
+      const compressed = await pdfDoc.save({ useObjectStreams: true, addDefaultPage: false });
       const blob = new Blob([compressed.buffer as ArrayBuffer], { type: "application/pdf" });
-      setResult({
-        blob,
-        compressedSize: blob.size,
-        originalSize: fileState.originalSize,
-      });
+      setResult({ blob, compressedSize: blob.size, originalSize: fileState.originalSize });
     } catch {
       setError("Could not compress this PDF. It may be encrypted or corrupted.");
     } finally {
@@ -138,13 +130,7 @@ export default function CompressPDFTool() {
             textAlign: "center",
           }}
         >
-          <input
-            ref={inputRef}
-            type="file"
-            accept="application/pdf"
-            onChange={onInputChange}
-            className="hidden"
-          />
+          <input ref={inputRef} type="file" accept="application/pdf" onChange={onInputChange} className="hidden" />
           <div style={{ marginBottom: 12 }}>
             <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ margin: "0 auto" }}>
               <rect width="40" height="40" rx="8" fill="rgba(0,88,195,0.08)"/>
@@ -160,7 +146,7 @@ export default function CompressPDFTool() {
       )}
 
       {error && (
-        <div style={{ background: "rgba(220,38,38,0.06)", border: "1px solid rgba(220,38,38,0.2)", borderRadius: 8, padding: "12px 16px" }}>
+        <div style={{ background: "rgba(220,38,38,0.06)", borderRadius: 8, padding: "12px 16px", boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)" }}>
           <p style={{ color: "#dc2626", fontSize: 13, fontWeight: 500 }}>{error}</p>
         </div>
       )}
@@ -232,7 +218,7 @@ export default function CompressPDFTool() {
             <p style={{ color: "#181c1e", fontWeight: 600, fontSize: 14 }}>Compression complete</p>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12, marginBottom: 20 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12, marginBottom: 24 }}>
             {[
               { label: "ORIGINAL", value: formatBytes(result.originalSize) },
               { label: "COMPRESSED", value: formatBytes(result.compressedSize) },
@@ -243,6 +229,19 @@ export default function CompressPDFTool() {
                 <p style={{ color: "#181c1e", fontSize: 16, fontWeight: 700 }}>{value}</p>
               </div>
             ))}
+          </div>
+
+          <div style={{ marginBottom: 20, boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)", borderRadius: 8, overflow: "hidden" }}>
+            <AdSlot slot="8942680933" format="rectangle" />
+          </div>
+
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 6, background: "rgba(0,88,195,0.08)", borderRadius: 4, padding: "5px 10px" }}>
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                <path d="M6 1L2 3v3c0 2.5 1.67 4.5 4 5 2.33-.5 4-2.5 4-5V3L6 1z" fill="#0058c3"/>
+              </svg>
+              <span style={{ fontSize: 11, fontWeight: 600, color: "#0058c3", letterSpacing: "0.04em" }}>Processed Locally</span>
+            </div>
           </div>
 
           <button
