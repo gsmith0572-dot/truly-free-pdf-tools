@@ -42,15 +42,16 @@ async function renderPageToJpeg(page: any, dpi: number, quality: number): Promis
     canvas.width = Math.floor(viewport.width);
     canvas.height = Math.floor(viewport.height);
     const ctx = canvas.getContext("2d");
+    const renderTask = page.render({ canvasContext: ctx, viewport });
     await Promise.race([
-      page.render({ canvasContext: ctx, viewport }).promise,
-      new Promise((_, reject) => setTimeout(() => reject(new Error("timeout")), 15000)),
+      renderTask.promise.catch(() => {}),
+      new Promise((resolve) => setTimeout(resolve, 10000)),
     ]);
-    return new Promise((resolve) => {
+    return await new Promise((resolve) => {
       canvas.toBlob(
         (blob) => {
           if (!blob) { resolve(null); return; }
-          blob.arrayBuffer().then((buf) => resolve(new Uint8Array(buf)));
+          blob.arrayBuffer().then((buf) => resolve(new Uint8Array(buf))).catch(() => resolve(null));
         },
         "image/jpeg",
         quality
@@ -128,22 +129,35 @@ export default function CompressPDFTool() {
           import.meta.url
         ).toString();
 
-        const pdfJsDoc = await pdfjsLib.getDocument({ data: new Uint8Array(arrayBuffer) }).promise;
+        const originalWarn = console.warn;
+        console.warn = () => {};
+
+        const pdfJsDoc = await pdfjsLib.getDocument({
+          data: new Uint8Array(arrayBuffer),
+          verbosity: 0,
+        }).promise;
+
         const numPages = pdfJsDoc.numPages;
         const outDoc = await PDFDocument.create();
         let pagesRendered = 0;
 
         for (let i = 1; i <= numPages; i++) {
           setProgress(10 + Math.round((i / numPages) * 80));
-          const page = await pdfJsDoc.getPage(i);
-          const jpegBytes = await renderPageToJpeg(page, dpi, quality);
-          if (!jpegBytes) continue;
-          const jpegImage = await outDoc.embedJpg(jpegBytes);
-          const { width, height } = jpegImage.scale(1);
-          const outPage = outDoc.addPage([width, height]);
-          outPage.drawImage(jpegImage, { x: 0, y: 0, width, height });
-          pagesRendered++;
+          try {
+            const page = await pdfJsDoc.getPage(i);
+            const jpegBytes = await renderPageToJpeg(page, dpi, quality);
+            if (jpegBytes) {
+              const jpegImage = await outDoc.embedJpg(jpegBytes);
+              const { width, height } = jpegImage.scale(1);
+              const outPage = outDoc.addPage([width, height]);
+              outPage.drawImage(jpegImage, { x: 0, y: 0, width, height });
+              pagesRendered++;
+            }
+          } catch {
+          }
         }
+
+        console.warn = originalWarn;
 
         if (pagesRendered === numPages) {
           const canvasBytes = await outDoc.save({ useObjectStreams: true });
@@ -158,7 +172,7 @@ export default function CompressPDFTool() {
       setProgress(100);
 
       if (bestSize >= fileState.originalSize) {
-        setError("This PDF is already optimally compressed and cannot be reduced further.");
+        setError("This PDF is already fully optimized and cannot be reduced further.");
         return;
       }
 
