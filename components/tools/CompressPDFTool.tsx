@@ -2,6 +2,12 @@
 
 import { useState, useRef, useCallback } from "react";
 import { PDFDocument } from "pdf-lib";
+import * as pdfjsLib from "pdfjs-dist";
+
+pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
+  "pdfjs-dist/build/pdf.worker.min.mjs",
+  import.meta.url
+).toString();
 
 type CompressionLevel = "low" | "medium" | "high";
 
@@ -99,13 +105,8 @@ export default function CompressPDFTool() {
     try {
       const { dpi, quality } = LEVELS[level];
       const arrayBuffer = await fileState.file.arrayBuffer();
-
-      const pdfjsLib = await import("pdfjs-dist");
-      pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
-
       const pdfJsDoc = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
       const numPages = pdfJsDoc.numPages;
-
       const outDoc = await PDFDocument.create();
 
       for (let i = 1; i <= numPages; i++) {
@@ -120,7 +121,7 @@ export default function CompressPDFTool() {
       const saved = await outDoc.save({ useObjectStreams: true });
       const blob = new Blob([saved.buffer as ArrayBuffer], { type: "application/pdf" });
       setResult({ blob, compressedSize: blob.size, originalSize: fileState.originalSize });
-    } catch {
+    } catch (err) {
       setError("Could not compress this PDF. It may be corrupted or unsupported.");
     } finally {
       setProcessing(false);
