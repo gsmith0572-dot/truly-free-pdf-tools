@@ -23,15 +23,13 @@ const LEVELS: Record<CompressionLevel, { dpi: number; quality: number; label: st
   high:   { dpi: 96,  quality: 0.50, label: "High — smallest file, reduced quality" },
 };
 
-const PROCESSING_MESSAGES = [
-  "Rendering pages locally...",
-  "Your file never leaves this tab.",
-  "Optimizing PDF structure...",
-  "No upload. No server. Just your browser.",
-  "Compressing image layers...",
-  "Almost there. Processing locally.",
-  "Stripping redundant metadata...",
-  "Your privacy is protected.",
+const PRIVACY_FACTS = [
+  "Your file never leaves this browser tab.",
+  "Zero uploads. Zero servers. Zero risk.",
+  "WebAssembly runs the compression on your device.",
+  "When you close this tab, all data is gone.",
+  "No account. No email. No trace.",
+  "Your documents stay yours.",
 ];
 
 function formatBytes(bytes: number): string {
@@ -73,73 +71,122 @@ async function renderPageToJpeg(page: any, dpi: number, quality: number): Promis
   }
 }
 
-function ProcessingIndicator({ progress }: { progress: number }) {
-  const [msgIndex, setMsgIndex] = useState(0);
-  const [fade, setFade] = useState(true);
+function PageCompressVisualizer({ progress, totalPages, currentPage }: { progress: number; totalPages: number; currentPage: number }) {
+  const [factIndex, setFactIndex] = useState(0);
+  const [visible, setVisible] = useState(true);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setFade(false);
+      setVisible(false);
       setTimeout(() => {
-        setMsgIndex((i) => (i + 1) % PROCESSING_MESSAGES.length);
-        setFade(true);
-      }, 300);
-    }, 3000);
+        setFactIndex((i) => (i + 1) % PRIVACY_FACTS.length);
+        setVisible(true);
+      }, 400);
+    }, 3500);
     return () => clearInterval(interval);
   }, []);
 
-  return (
-    <div style={{ textAlign: "center", padding: "32px 20px" }}>
-      <div style={{ display: "flex", justifyContent: "center", marginBottom: 24 }}>
-        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <style>{`
-            @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-            @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-            .spinner { animation: spin 1.2s linear infinite; transform-origin: 24px 24px; }
-            .inner-pulse { animation: pulse 1.2s ease-in-out infinite; }
-          `}</style>
-          <circle cx="24" cy="24" r="20" stroke="#e5e9eb" strokeWidth="3" fill="none"/>
-          <path className="spinner" d="M24 4 A20 20 0 0 1 44 24" stroke="url(#grad)" strokeWidth="3" strokeLinecap="round" fill="none"/>
-          <rect className="inner-pulse" x="18" y="18" width="12" height="12" rx="2" fill="rgba(0,88,195,0.15)"/>
-          <path className="inner-pulse" d="M24 20v4M24 26v0" stroke="#0058c3" strokeWidth="2" strokeLinecap="round"/>
-          <defs>
-            <linearGradient id="grad" x1="24" y1="4" x2="44" y2="24" gradientUnits="userSpaceOnUse">
-              <stop stopColor="#0058c3"/>
-              <stop offset="1" stopColor="#0070f3"/>
-            </linearGradient>
-          </defs>
-        </svg>
-      </div>
+  const displayPages = Math.max(5, Math.min(totalPages, 8));
+  const pages = Array.from({ length: displayPages }, (_, i) => {
+    const pageNum = i + 1;
+    const isDone = totalPages > 0 && pageNum <= currentPage;
+    const isActive = totalPages > 0 && pageNum === currentPage + 1;
+    return { pageNum, isDone, isActive };
+  });
 
-      <p
-        style={{
-          fontSize: 14,
-          fontWeight: 600,
-          color: "#181c1e",
-          letterSpacing: "-0.02em",
-          marginBottom: 20,
-          opacity: fade ? 1 : 0,
-          transition: "opacity 0.3s ease",
-          minHeight: 22,
-        }}
-      >
-        {PROCESSING_MESSAGES[msgIndex]}
+  return (
+    <div style={{ padding: "36px 28px 28px", textAlign: "center" }}>
+      <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", color: "#718096", textTransform: "uppercase", marginBottom: 24 }}>
+        Compressing
       </p>
 
-      <div style={{ background: "#e5e9eb", borderRadius: 4, height: 6, marginBottom: 10, overflow: "hidden" }}>
-        <div
-          style={{
-            background: "linear-gradient(135deg, #0058c3, #0070f3)",
-            borderRadius: 4,
-            height: 6,
-            width: `${progress}%`,
-            transition: "width 0.4s ease",
-          }}
-        />
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "flex-end", gap: 6, marginBottom: 28, height: 56 }}>
+        {pages.map((p, i) => {
+          const baseHeight = 40 + (i % 3) * 8;
+          const compressedHeight = p.isDone ? baseHeight * 0.45 : baseHeight;
+          return (
+            <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 3 }}>
+              <div
+                style={{
+                  width: 18,
+                  height: compressedHeight,
+                  borderRadius: 3,
+                  background: p.isDone
+                    ? "linear-gradient(180deg, #16a34a, #15803d)"
+                    : p.isActive
+                    ? "linear-gradient(180deg, #0070f3, #0058c3)"
+                    : "#e5e9eb",
+                  transition: "height 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.3s ease",
+                  position: "relative",
+                  overflow: "hidden",
+                }}
+              >
+                {p.isActive && (
+                  <div style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    background: "linear-gradient(180deg, rgba(255,255,255,0.3) 0%, transparent 100%)",
+                    animation: "shimmer 1s ease-in-out infinite",
+                  }} />
+                )}
+              </div>
+              {p.isDone && (
+                <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
+                  <path d="M1.5 4L3 5.5L6.5 2" stroke="#16a34a" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              )}
+            </div>
+          );
+        })}
       </div>
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <p style={{ fontSize: 11, color: "#718096", letterSpacing: "0.04em" }}>PROCESSING</p>
-        <p style={{ fontSize: 11, color: "#0058c3", fontWeight: 700, letterSpacing: "0.04em" }}>{progress}%</p>
+
+      <style>{`
+        @keyframes shimmer {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.3; }
+        }
+      `}</style>
+
+      <div style={{ background: "#f7fafc", borderRadius: 6, height: 6, marginBottom: 10, overflow: "hidden" }}>
+        <div style={{
+          background: "linear-gradient(135deg, #0058c3, #0070f3)",
+          height: 6,
+          borderRadius: 6,
+          width: `${progress}%`,
+          transition: "width 0.4s ease",
+        }} />
+      </div>
+
+      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 20 }}>
+        <span style={{ fontSize: 11, color: "#718096", letterSpacing: "-0.01em" }}>
+          {totalPages > 0 ? `Page ${Math.min(currentPage, totalPages)} of ${totalPages}` : "Initializing..."}
+        </span>
+        <span style={{ fontSize: 11, fontWeight: 700, color: "#0058c3" }}>{progress}%</span>
+      </div>
+
+      <div style={{
+        background: "rgba(0,88,195,0.06)",
+        borderRadius: 6,
+        padding: "10px 14px",
+        minHeight: 36,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}>
+        <p style={{
+          fontSize: 12,
+          color: "#0058c3",
+          fontWeight: 600,
+          letterSpacing: "-0.01em",
+          margin: 0,
+          opacity: visible ? 1 : 0,
+          transition: "opacity 0.4s ease",
+        }}>
+          {PRIVACY_FACTS[factIndex]}
+        </p>
       </div>
     </div>
   );
@@ -150,6 +197,8 @@ export default function CompressPDFTool() {
   const [level, setLevel] = useState<CompressionLevel>("medium");
   const [processing, setProcessing] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
   const [result, setResult] = useState<ResultState | null>(null);
   const [dragging, setDragging] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -181,6 +230,8 @@ export default function CompressPDFTool() {
     if (!fileState) return;
     setProcessing(true);
     setProgress(0);
+    setCurrentPage(0);
+    setTotalPages(0);
     setError(null);
     try {
       const { dpi, quality } = LEVELS[level];
@@ -215,16 +266,15 @@ export default function CompressPDFTool() {
         const originalWarn = console.warn;
         console.warn = () => {};
 
-        const pdfJsDoc = await pdfjsLib.getDocument({
-          data: new Uint8Array(arrayBuffer),
-          verbosity: 0,
-        }).promise;
-
+        const pdfJsDoc = await pdfjsLib.getDocument({ data: new Uint8Array(arrayBuffer), verbosity: 0 }).promise;
         const numPages = pdfJsDoc.numPages;
+        setTotalPages(numPages);
+
         const outDoc = await PDFDocument.create();
         let pagesRendered = 0;
 
         for (let i = 1; i <= numPages; i++) {
+          setCurrentPage(i);
           setProgress(10 + Math.round((i / numPages) * 80));
           try {
             const page = await pdfJsDoc.getPage(i);
@@ -264,6 +314,8 @@ export default function CompressPDFTool() {
     } finally {
       setProcessing(false);
       setProgress(0);
+      setCurrentPage(0);
+      setTotalPages(0);
     }
   };
 
@@ -282,6 +334,8 @@ export default function CompressPDFTool() {
     setResult(null);
     setError(null);
     setProgress(0);
+    setCurrentPage(0);
+    setTotalPages(0);
     if (inputRef.current) inputRef.current.value = "";
   };
 
@@ -328,7 +382,7 @@ export default function CompressPDFTool() {
       {fileState && !result && !error && (
         <div style={{ background: "#ffffff", borderRadius: 8, boxShadow: "0px 8px 24px rgba(24,28,30,0.06)", overflow: "hidden" }}>
           {processing ? (
-            <ProcessingIndicator progress={progress} />
+            <PageCompressVisualizer progress={progress} totalPages={totalPages} currentPage={currentPage} />
           ) : (
             <div style={{ padding: 20 }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
