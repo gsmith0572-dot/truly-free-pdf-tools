@@ -34,21 +34,31 @@ function reductionPct(original: number, compressed: number): string {
   return pct.toFixed(1) + "%";
 }
 
-async function renderPageToJpeg(page: any, dpi: number, quality: number): Promise<Uint8Array> {
-  const scale = dpi / 72;
-  const viewport = page.getViewport({ scale });
-  const canvas = document.createElement("canvas");
-  canvas.width = Math.floor(viewport.width);
-  canvas.height = Math.floor(viewport.height);
-  const ctx = canvas.getContext("2d");
-  await page.render({ canvasContext: ctx, viewport }).promise;
-  return new Promise((resolve) => {
-    canvas.toBlob(
-      (blob) => { blob!.arrayBuffer().then((buf) => resolve(new Uint8Array(buf))); },
-      "image/jpeg",
-      quality
-    );
-  });
+async function renderPageToJpeg(page: any, dpi: number, quality: number): Promise<Uint8Array | null> {
+  try {
+    const scale = dpi / 72;
+    const viewport = page.getViewport({ scale });
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.floor(viewport.width);
+    canvas.height = Math.floor(viewport.height);
+    const ctx = canvas.getContext("2d");
+    await Promise.race([
+      page.render({ canvasContext: ctx, viewport }).promise,
+      new Promise((_, reject) => setTimeout(() => reject(new Error("timeout")), 15000)),
+    ]);
+    return new Promise((resolve) => {
+      canvas.toBlob(
+        (blob) => {
+          if (!blob) { resolve(null); return; }
+          blob.arrayBuffer().then((buf) => resolve(new Uint8Array(buf)));
+        },
+        "image/jpeg",
+        quality
+      );
+    });
+  } catch {
+    return null;
+  }
 }
 
 export default function CompressPDFTool() {
@@ -106,37 +116,46 @@ export default function CompressPDFTool() {
         pdfDoc.setModificationDate(new Date(0));
       }
       const structBytes = await pdfDoc.save({ useObjectStreams: true, addDefaultPage: false });
-      const structSize = structBytes.byteLength;
-
       setProgress(10);
 
-      const pdfjsLib = await import("pdfjs-dist/legacy/build/pdf.mjs");
-      pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
-        "pdfjs-dist/legacy/build/pdf.worker.mjs",
-        import.meta.url
-      ).toString();
+      let bestBytes: Uint8Array = structBytes;
+      let bestSize: number = structBytes.byteLength;
 
-      const pdfJsDoc = await pdfjsLib.getDocument({ data: new Uint8Array(arrayBuffer) }).promise;
-      const numPages = pdfJsDoc.numPages;
-      const outDoc = await PDFDocument.create();
+      try {
+        const pdfjsLib = await import("pdfjs-dist/legacy/build/pdf.mjs");
+        pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
+          "pdfjs-dist/legacy/build/pdf.worker.mjs",
+          import.meta.url
+        ).toString();
 
-      for (let i = 1; i <= numPages; i++) {
-        setProgress(10 + Math.round((i / numPages) * 85));
-        const page = await pdfJsDoc.getPage(i);
-        const jpegBytes = await renderPageToJpeg(page, dpi, quality);
-        const jpegImage = await outDoc.embedJpg(jpegBytes);
-        const { width, height } = jpegImage.scale(1);
-        const outPage = outDoc.addPage([width, height]);
-        outPage.drawImage(jpegImage, { x: 0, y: 0, width, height });
+        const pdfJsDoc = await pdfjsLib.getDocument({ data: new Uint8Array(arrayBuffer) }).promise;
+        const numPages = pdfJsDoc.numPages;
+        const outDoc = await PDFDocument.create();
+        let pagesRendered = 0;
+
+        for (let i = 1; i <= numPages; i++) {
+          setProgress(10 + Math.round((i / numPages) * 80));
+          const page = await pdfJsDoc.getPage(i);
+          const jpegBytes = await renderPageToJpeg(page, dpi, quality);
+          if (!jpegBytes) continue;
+          const jpegImage = await outDoc.embedJpg(jpegBytes);
+          const { width, height } = jpegImage.scale(1);
+          const outPage = outDoc.addPage([width, height]);
+          outPage.drawImage(jpegImage, { x: 0, y: 0, width, height });
+          pagesRendered++;
+        }
+
+        if (pagesRendered === numPages) {
+          const canvasBytes = await outDoc.save({ useObjectStreams: true });
+          if (canvasBytes.byteLength < bestSize) {
+            bestBytes = canvasBytes;
+            bestSize = canvasBytes.byteLength;
+          }
+        }
+      } catch {
       }
 
-      const canvasBytes = await outDoc.save({ useObjectStreams: true });
-      const canvasSize = canvasBytes.byteLength;
-
       setProgress(100);
-
-      const bestBytes = canvasSize < structSize ? canvasBytes : structBytes;
-      const bestSize = Math.min(canvasSize, structSize);
 
       if (bestSize >= fileState.originalSize) {
         setError("This PDF is already optimally compressed and cannot be reduced further.");
@@ -205,11 +224,9 @@ export default function CompressPDFTool() {
       {error && (
         <div style={{ background: "rgba(220,38,38,0.06)", borderRadius: 8, padding: "12px 16px" }}>
           <p style={{ color: "#dc2626", fontSize: 13, fontWeight: 500 }}>{error}</p>
-          {fileState && (
-            <button onClick={reset} style={{ color: "#0058c3", fontSize: 12, background: "none", border: "none", cursor: "pointer", padding: "8px 0 0", fontWeight: 600 }}>
-              Try another PDF
-            </button>
-          )}
+          <button onClick={reset} style={{ color: "#0058c3", fontSize: 12, background: "none", border: "none", cursor: "pointer", padding: "8px 0 0", fontWeight: 600 }}>
+            Try another PDF
+          </button>
         </div>
       )}
 
