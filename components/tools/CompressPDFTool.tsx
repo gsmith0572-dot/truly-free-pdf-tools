@@ -2,7 +2,6 @@
 
 import { useState, useRef, useCallback } from "react";
 import { PDFDocument } from "pdf-lib";
-import AdSlot from "@/components/ads/AdSlot";
 
 type CompressionLevel = "low" | "medium" | "high";
 
@@ -19,15 +18,9 @@ interface ResultState {
 }
 
 const COMPRESSION_LABELS: Record<CompressionLevel, string> = {
-  low: "Low - Best quality",
-  medium: "Medium - Balanced",
-  high: "High - Smallest size",
-};
-
-const COMPRESSION_SCALE: Record<CompressionLevel, number> = {
-  low: 0.85,
-  medium: 0.65,
-  high: 0.40,
+  low: "Low — preserves all content, removes redundant data",
+  medium: "Medium — removes metadata, optimizes structure",
+  high: "High — maximum optimization, removes all optional data",
 };
 
 function formatBytes(bytes: number): string {
@@ -79,16 +72,30 @@ export default function CompressPDFTool() {
     try {
       const arrayBuffer = await fileState.file.arrayBuffer();
       const pdfDoc = await PDFDocument.load(arrayBuffer, { ignoreEncryption: true });
-      const pages = pdfDoc.getPages();
-      const scale = COMPRESSION_SCALE[level];
-      for (const page of pages) {
-        const { width, height } = page.getSize();
-        page.setSize(width * scale, height * scale);
-        page.scaleContent(scale, scale);
-        page.setSize(width, height);
+
+      if (level === "medium" || level === "high") {
+        pdfDoc.setTitle("");
+        pdfDoc.setAuthor("");
+        pdfDoc.setSubject("");
+        pdfDoc.setKeywords([]);
+        pdfDoc.setProducer("");
+        pdfDoc.setCreator("");
       }
-      const compressed = await pdfDoc.save({ useObjectStreams: true, addDefaultPage: false });
+
+      if (level === "high") {
+        pdfDoc.setCreationDate(new Date(0));
+        pdfDoc.setModificationDate(new Date(0));
+      }
+
+      const saveOptions: Parameters<typeof pdfDoc.save>[0] = {
+        useObjectStreams: true,
+        addDefaultPage: false,
+        objectsPerTick: level === "high" ? 50 : level === "medium" ? 20 : 10,
+      };
+
+      const compressed = await pdfDoc.save(saveOptions);
       const blob = new Blob([compressed.buffer as ArrayBuffer], { type: "application/pdf" });
+
       setResult({ blob, compressedSize: blob.size, originalSize: fileState.originalSize });
     } catch {
       setError("Could not compress this PDF. It may be encrypted or corrupted.");
@@ -146,7 +153,7 @@ export default function CompressPDFTool() {
       )}
 
       {error && (
-        <div style={{ background: "rgba(220,38,38,0.06)", borderRadius: 8, padding: "12px 16px", boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)" }}>
+        <div style={{ background: "rgba(220,38,38,0.06)", borderRadius: 8, padding: "12px 16px" }}>
           <p style={{ color: "#dc2626", fontSize: 13, fontWeight: 500 }}>{error}</p>
         </div>
       )}
@@ -218,7 +225,7 @@ export default function CompressPDFTool() {
             <p style={{ color: "#181c1e", fontWeight: 600, fontSize: 14 }}>Compression complete</p>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12, marginBottom: 24 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12, marginBottom: 20 }}>
             {[
               { label: "ORIGINAL", value: formatBytes(result.originalSize) },
               { label: "COMPRESSED", value: formatBytes(result.compressedSize) },
@@ -231,11 +238,7 @@ export default function CompressPDFTool() {
             ))}
           </div>
 
-          <div style={{ marginBottom: 20, boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)", borderRadius: 8, overflow: "hidden" }}>
-            <AdSlot slot="8942680933" format="rectangle" />
-          </div>
-
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 16 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 6, background: "rgba(0,88,195,0.08)", borderRadius: 4, padding: "5px 10px" }}>
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
                 <path d="M6 1L2 3v3c0 2.5 1.67 4.5 4 5 2.33-.5 4-2.5 4-5V3L6 1z" fill="#0058c3"/>
@@ -263,7 +266,7 @@ export default function CompressPDFTool() {
       )}
 
       <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
-        <svg width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
           <path d="M6.5 1.5C3.74 1.5 1.5 3.74 1.5 6.5S3.74 11.5 6.5 11.5 11.5 9.26 11.5 6.5 9.26 1.5 6.5 1.5zm0 4.5a1 1 0 110-2 1 1 0 010 2zm1 3H5.5V7h2v2z" fill="#718096"/>
         </svg>
         <p style={{ color: "#718096", fontSize: 12 }}>
