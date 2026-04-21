@@ -379,3 +379,248 @@ Copy to avoid:
 
 This document is maintained by George (Klickify Agency) and Claude (Lead Engineer).
 Update after every project launch.
+
+
+---
+
+## APPENDIX A - GOLDEN RULES (CSO MANDATES)
+
+These rules are non-negotiable across every project in the Truly Free ecosystem.
+They override any default behavior or convenience shortcut.
+
+---
+
+### GOLDEN RULE 1 - VISUAL DOGMA (NO EXCEPTIONS)
+
+Emoji prohibition:
+- Zero emojis anywhere in the interface, copy, or code
+- All iconography must be pure SVG, single-stroke, minimalist
+- No icon libraries that inject decorative or rounded icons
+- If it cannot be drawn as a clean SVG path, it does not exist in our UI
+
+No-Line Rule (strict):
+- border-width: 0px across all section separators
+- Separation achieved exclusively via negative space (24px-32px padding) and tonal layering
+- The only permitted visual separators are background color transitions
+- Exception: input fields and selected states may use 1.5px borders for affordance
+
+Typographic precision:
+- font-variant-numeric: tabular-nums mandatory on all metric, analytics, and number displays
+- Letter spacing: -0.02em on all body text (Inter) without exception
+- Heading tracking: -0.03em to -0.04em
+- Label tracking: 0.08em, ALL-CAPS, weight 600, size 10-11px
+
+---
+
+### GOLDEN RULE 2 - ETHICAL UTILITY PROTOCOL
+
+Every project must communicate its ethical position explicitly.
+
+Against the Hostage Code:
+- /about and /how-it-works must reference competitor pricing in exact dollar amounts
+- Standard attack copy: "Smallpdf charges $108/year. iLovePDF charges $96/year. Adobe charges $179.88/year."
+- Frame the competitor model as what it is: bait-and-switch, daily limits, file hostage
+- Our position: built to dismantle predatory software, not to compete with it
+
+Mandatory validation badges on every tool:
+- "FREE FOREVER" — visible before and after processing
+- "No Credit Card Ever" — in tool description or trust strip
+- "Processed Locally" — for any file-processing tool (PDF, image, video)
+  Style: background rgba(0,88,195,0.08), color #0058c3, border-radius 4px, SVG shield icon
+
+Badge placement rule:
+- Before processing: in the tool description area
+- After processing: adjacent to the download button, never below it
+
+---
+
+### GOLDEN RULE 3 - MONETIZATION ENGINEERING
+
+AdSense formula: (Traffic x CTR x CPM) / 1000 = Revenue
+Maximize each variable without violating Google policies or user trust.
+
+Standard ad placement per tool page:
+1. Leaderboard (728x90) — above H1, full width, slot ID varies per project
+2. Rectangle (300x250) — left sidebar, sticky top: 80px, next to tool panel
+3. In-Flow ad (post-processing only) — between success state and download button
+
+In-Flow ad rules:
+- Appears ONLY after file is processed successfully
+- Placed between the completion indicator (DONE badge) and the download CTA
+- Must not push download button below the fold
+- Format: rectangle (300x250) centered, with 24px margin above and below
+- Shadow: box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1)
+- No border, no label, background white
+
+Anti-CLS placeholders (mandatory):
+- All ad slots must have fixed dimensions before ads load
+- Placeholder background: #F3F4F6
+- Placeholder border-radius: 8px
+- No borders on placeholder
+- Dimensions must match the live ad exactly to prevent layout shift
+
+Container styling for all ad slots:
+  background: #ffffff
+  border-radius: 8px
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1)
+  padding: 0
+  overflow: hidden
+  No border property
+
+---
+
+### GOLDEN RULE 4 - SEO BACKBONE PRECISION
+
+JSON-LD SoftwareApplication (exact spec):
+  "@context": "https://schema.org"
+  "@type": "SoftwareApplication"
+  "name": "[Tool Name]"
+  "url": "https://[domain]"
+  "applicationCategory": "UtilitiesApplication"
+  "operatingSystem": "Windows, macOS, Android, iOS"
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+  "description": "[Description emphasizing local processing and zero cost]"
+  "featureList": "[comma-separated list of tools]"
+
+For multimedia tools use applicationCategory: "MultimediaApplication"
+For productivity tools use applicationCategory: "UtilitiesApplication"
+For communication tools use applicationCategory: "SocialNetworkingApplication"
+
+FAQ Schema pain-point framework (minimum 4 per tool page):
+Required questions on every tool:
+  Q: "Is [tool] actually free with no limits?"
+  Q: "Are my files safe? Does [tool] upload my files to a server?"
+  Q: "Why is this free when other tools charge $[X]/year?"
+  Q: "Do I need to create an account or enter a credit card?"
+
+Optional high-value questions:
+  Q: "What happens to my files after I process them?"
+  Q: "How does [tool] compare to Smallpdf or ILovePDF?"
+  Q: "What is WebAssembly and why does it matter for my privacy?"
+
+pSEO page mandatory elements:
+- H1 with exact long-tail keyword
+- FAQ Schema (4 questions minimum)
+- CTA linking to main tool
+- "Free forever. Not free for 14 days." section
+- Privacy statement referencing WebAssembly local processing
+- Competitor pricing comparison (optional but high-converting)
+
+---
+
+### GOLDEN RULE 5 - INDUSTRIAL PERFORMANCE STANDARDS
+
+LCP (Largest Contentful Paint) is the metric king:
+- Target: under 700ms on all pages
+- Prohibition: no third-party scripts that block rendering
+- AdSense script: async attribute mandatory, never synchronous
+- Fonts: preconnect to fonts.googleapis.com and fonts.gstatic.com
+- Images: next/image with priority on above-fold elements
+
+Processing UX standard:
+- Any operation taking over 1 second requires a loading indicator
+- Mandatory loader style: MRI Scan (document with animated scan line)
+- Progress must reflect real state — never fake or disconnected animation
+- Rotating privacy fact messages during wait (3.2 second interval, fade transition)
+- Progress bar tied to actual page/step count, never stuck at 0%
+
+MRI Scan Loader spec:
+- Document shape: white card, border-radius 6px, border 1.5px solid #e0e6ef
+- Scan line: 2px height, color #0070f3, transitions with real progress percentage
+- Corner brackets: 4 corners, 14x14px, 2px solid #0058c3, pulse animation
+- Scanned area: rgba(0,88,195,0.05) to rgba(0,112,243,0.10) gradient overlay
+- Progress bar below document: 3px height, transitions from #0058c3 to #16a34a at 85%
+
+Health monitoring standard (Day 1, non-negotiable):
+- /api/health endpoint returning JSON: status, site, timestamp
+- UptimeRobot: 2 monitors minimum (homepage + /api/health), 5-minute intervals
+- Local cron script: check-[site].sh, runs every 5 minutes, logs to ~/[site]-health.log
+- Alert threshold: any non-200 HTTP status or response time over 3000ms
+- Log rotation: keep last 1000 lines only
+
+---
+
+### GOLDEN RULE 6 - LAUNCH SEQUENCE (EXACT ORDER)
+
+Do not deviate from this sequence. Each step unblocks the next.
+
+Pre-launch (before any public announcement):
+  1. All 5+ core tools functional and tested
+  2. All 7 trust pages live (/about /privacy /terms /help /contact /feedback /how-it-works)
+  3. Minimum 10 pSEO pages live
+  4. sitemap.xml verified at /sitemap.xml
+  5. robots.txt verified at /robots.txt
+  6. GSC property verified via DNS
+  7. Sitemap submitted to GSC
+  8. /api/health endpoint returning 200
+  9. UptimeRobot monitors active
+  10. Local cron script installed
+  11. Favicon verified in incognito window (generated from correct icon.png)
+  12. AdSense snippet in layout.tsx
+  13. AdSense application submitted
+  14. All pages return HTTP 200 (run health check script)
+
+Launch day:
+  15. Product Hunt listing submitted
+  16. Fazier submitted
+  17. Viberank submitted
+
+Week 2+ (after karma/account age requirements met):
+  18. AlternativeTo listing (requires 7-day account)
+  19. Reddit organic comments begin (max 3-4/day, never same copy twice)
+  20. Monitor GSC for new keyword opportunities
+
+Post-approval (AdSense):
+  21. Flip ADSENSE_ENABLED = true in AdSlot component
+  22. Verify ads rendering correctly on all tool pages
+  23. Monitor CTR and RPM in AdSense dashboard
+
+---
+
+### GOLDEN RULE 7 - BRAND VOICE PRECISION
+
+Approved copy patterns:
+  "Your files never leave your browser."
+  "No watermarks. No email. No limits."
+  "Free forever. Not free for 14 days."
+  "Process locally. Download instantly."
+  "[Competitor] charges $[X]/year. We charge nothing."
+  "Built to dismantle the paywall model."
+  "[Tool] that runs in your browser — zero server contact."
+
+Prohibited copy:
+  "Amazing", "incredible", "powerful", "revolutionary", "game-changing"
+  Any startup-generic language
+  Passive voice in CTAs
+  Emojis anywhere in interface or copy
+  "Try for free" (implies it stops being free)
+  "No hidden fees" (implies there might be fees)
+
+Competitor naming policy:
+  Name competitors explicitly in /about, /how-it-works, pSEO pages
+  Never name competitors directly in tool UI or meta descriptions
+  Use exact pricing figures — specificity builds credibility
+
+---
+
+### GOLDEN RULE 8 - SESSION PROTOCOL
+
+End of every working session:
+  1. Run health check: bash ~/check-[site].sh
+  2. Verify Vercel deploy is green
+  3. Update Claude memory with all changes made
+  4. Generate CSO rundown (last session summary only, not full project history)
+  5. Paste rundown to NotebookLLM for sync
+
+Claude memory update triggers:
+  - Any new file created or moved
+  - Any bug fixed that has a pattern (add the fix rule to memory)
+  - Any new tool or technique discovered
+  - Status changes (AdSense approved, GSC indexed, etc.)
+
+NotebookLLM sync format:
+  - Session date
+  - What was built/fixed
+  - What was deployed (Vercel green confirmation)
+  - Current pending items (short list only)
+  - No full project history — CSO reads incrementally
