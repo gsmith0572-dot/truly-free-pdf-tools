@@ -26,9 +26,13 @@ export default function PDFToWordPage() {
         <div style={{ marginBottom: 32 }}>
           <AdSlot slot="6508089281" format="leaderboard" />
         </div>
-        <PDFToWordTool />
-        <div style={{ marginTop: 32 }}>
-          <AdSlot slot="8942680933" format="rectangle" />
+        <div style={{ display: "flex", gap: 24, alignItems: "flex-start" }}>
+          <div style={{ position: "sticky", top: 80 }}>
+            <AdSlot slot="8942680933" format="rectangle" />
+          </div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <PDFToWordTool />
+          </div>
         </div>
       </div>
     </main>

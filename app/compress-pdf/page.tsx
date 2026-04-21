@@ -4,11 +4,11 @@ import AdSlot from "@/components/ads/AdSlot"
 
 export const metadata: Metadata = {
   title: "Compress PDF Free — No Signup, No Watermark | TrulyFree Tools",
-  description: "Compress PDF files online for free. No email required. No file size limits. Your files never leave your browser.",
+  description: "Reduce PDF file size without losing quality. No watermarks. No email. No limits.",
   alternates: { canonical: "https://trulyfreetools.com/compress-pdf" },
 }
 
-export default function CompressPDFPage() {
+export default function Page() {
   return (
     <main style={{ minHeight: "100vh", background: "#f7fafc", padding: "60px 24px", fontFamily: "Inter, sans-serif" }}>
       <div style={{ maxWidth: 720, margin: "0 auto" }}>
@@ -26,9 +26,13 @@ export default function CompressPDFPage() {
         <div style={{ marginBottom: 32 }}>
           <AdSlot slot="6508089281" format="leaderboard" />
         </div>
-        <CompressPDFTool />
-        <div style={{ marginTop: 32 }}>
-          <AdSlot slot="8942680933" format="rectangle" />
+        <div style={{ display: "flex", gap: 24, alignItems: "flex-start" }}>
+          <div style={{ position: "sticky", top: 80 }}>
+            <AdSlot slot="8942680933" format="rectangle" />
+          </div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <CompressPDFTool />
+          </div>
         </div>
       </div>
     </main>

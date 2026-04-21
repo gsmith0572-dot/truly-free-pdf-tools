@@ -3,12 +3,12 @@ import RemovePasswordTool from "@/components/tools/RemovePasswordTool"
 import AdSlot from "@/components/ads/AdSlot"
 
 export const metadata: Metadata = {
-  title: "Remove PDF Password Free — No Signup | TrulyFree Tools",
-  description: "Remove password protection from PDF files instantly. Free, no email required. Files never leave your browser.",
+  title: "Remove PDF Password Free — No Signup, No Watermark | TrulyFree Tools",
+  description: "Unlock password-protected PDFs instantly. No watermarks. No email. No limits.",
   alternates: { canonical: "https://trulyfreetools.com/remove-pdf-password" },
 }
 
-export default function RemovePasswordPage() {
+export default function Page() {
   return (
     <main style={{ minHeight: "100vh", background: "#f7fafc", padding: "60px 24px", fontFamily: "Inter, sans-serif" }}>
       <div style={{ maxWidth: 720, margin: "0 auto" }}>
@@ -26,9 +26,13 @@ export default function RemovePasswordPage() {
         <div style={{ marginBottom: 32 }}>
           <AdSlot slot="6508089281" format="leaderboard" />
         </div>
-        <RemovePasswordTool />
-        <div style={{ marginTop: 32 }}>
-          <AdSlot slot="8942680933" format="rectangle" />
+        <div style={{ display: "flex", gap: 24, alignItems: "flex-start" }}>
+          <div style={{ position: "sticky", top: 80 }}>
+            <AdSlot slot="8942680933" format="rectangle" />
+          </div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <RemovePasswordTool />
+          </div>
         </div>
       </div>
     </main>

@@ -4,11 +4,11 @@ import AdSlot from "@/components/ads/AdSlot"
 
 export const metadata: Metadata = {
   title: "Merge PDF Free — No Signup, No Watermark | TrulyFree Tools",
-  description: "Combine multiple PDF files into one. Free, no email required. Files never leave your browser.",
+  description: "Combine multiple PDFs into one file instantly. No watermarks. No email. No limits.",
   alternates: { canonical: "https://trulyfreetools.com/merge-pdf" },
 }
 
-export default function MergePDFPage() {
+export default function Page() {
   return (
     <main style={{ minHeight: "100vh", background: "#f7fafc", padding: "60px 24px", fontFamily: "Inter, sans-serif" }}>
       <div style={{ maxWidth: 720, margin: "0 auto" }}>
@@ -26,9 +26,13 @@ export default function MergePDFPage() {
         <div style={{ marginBottom: 32 }}>
           <AdSlot slot="6508089281" format="leaderboard" />
         </div>
-        <MergePDFTool />
-        <div style={{ marginTop: 32 }}>
-          <AdSlot slot="8942680933" format="rectangle" />
+        <div style={{ display: "flex", gap: 24, alignItems: "flex-start" }}>
+          <div style={{ position: "sticky", top: 80 }}>
+            <AdSlot slot="8942680933" format="rectangle" />
+          </div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <MergePDFTool />
+          </div>
         </div>
       </div>
     </main>

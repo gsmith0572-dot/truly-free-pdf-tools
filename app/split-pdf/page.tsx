@@ -4,11 +4,11 @@ import AdSlot from "@/components/ads/AdSlot"
 
 export const metadata: Metadata = {
   title: "Split PDF Free — No Signup, No Watermark | TrulyFree Tools",
-  description: "Split PDF files into separate pages or sections. Free, no email required. Files never leave your browser.",
+  description: "Extract pages or split PDFs into individual files. No watermarks. No email. No limits.",
   alternates: { canonical: "https://trulyfreetools.com/split-pdf" },
 }
 
-export default function SplitPDFPage() {
+export default function Page() {
   return (
     <main style={{ minHeight: "100vh", background: "#f7fafc", padding: "60px 24px", fontFamily: "Inter, sans-serif" }}>
       <div style={{ maxWidth: 720, margin: "0 auto" }}>
@@ -26,9 +26,13 @@ export default function SplitPDFPage() {
         <div style={{ marginBottom: 32 }}>
           <AdSlot slot="6508089281" format="leaderboard" />
         </div>
-        <SplitPDFTool />
-        <div style={{ marginTop: 32 }}>
-          <AdSlot slot="8942680933" format="rectangle" />
+        <div style={{ display: "flex", gap: 24, alignItems: "flex-start" }}>
+          <div style={{ position: "sticky", top: 80 }}>
+            <AdSlot slot="8942680933" format="rectangle" />
+          </div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <SplitPDFTool />
+          </div>
         </div>
       </div>
     </main>
