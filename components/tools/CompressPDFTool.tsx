@@ -17,10 +17,10 @@ interface ResultState {
   originalSize: number;
 }
 
-const COMPRESSION_LABELS: Record<CompressionLevel, string> = {
-  low: "Low — preserves all content, removes redundant data",
-  medium: "Medium — removes metadata, optimizes structure",
-  high: "High — maximum optimization, removes all optional data",
+const LEVELS: Record<CompressionLevel, { dpi: number; quality: number; label: string }> = {
+  low:    { dpi: 150, quality: 0.85, label: "Low — best quality, moderate reduction" },
+  medium: { dpi: 120, quality: 0.70, label: "Medium — balanced quality and size" },
+  high:   { dpi: 96,  quality: 0.50, label: "High — smallest file, reduced quality" },
 };
 
 function formatBytes(bytes: number): string {
@@ -34,10 +34,36 @@ function reductionPct(original: number, compressed: number): string {
   return pct.toFixed(1) + "%";
 }
 
+async function renderPageToJpeg(
+  pdfJsDoc: any,
+  pageNum: number,
+  dpi: number,
+  quality: number
+): Promise<Uint8Array> {
+  const page = await pdfJsDoc.getPage(pageNum);
+  const scale = dpi / 72;
+  const viewport = page.getViewport({ scale });
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.floor(viewport.width);
+  canvas.height = Math.floor(viewport.height);
+  const ctx = canvas.getContext("2d");
+  await page.render({ canvasContext: ctx, viewport }).promise;
+  return new Promise((resolve) => {
+    canvas.toBlob(
+      (blob) => {
+        blob!.arrayBuffer().then((buf) => resolve(new Uint8Array(buf)));
+      },
+      "image/jpeg",
+      quality
+    );
+  });
+}
+
 export default function CompressPDFTool() {
   const [fileState, setFileState] = useState<FileState | null>(null);
   const [level, setLevel] = useState<CompressionLevel>("medium");
   const [processing, setProcessing] = useState(false);
+  const [progress, setProgress] = useState(0);
   const [result, setResult] = useState<ResultState | null>(null);
   const [dragging, setDragging] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -68,39 +94,37 @@ export default function CompressPDFTool() {
   const compress = async () => {
     if (!fileState) return;
     setProcessing(true);
+    setProgress(0);
     setError(null);
     try {
+      const { dpi, quality } = LEVELS[level];
       const arrayBuffer = await fileState.file.arrayBuffer();
-      const pdfDoc = await PDFDocument.load(arrayBuffer, { ignoreEncryption: true });
 
-      if (level === "medium" || level === "high") {
-        pdfDoc.setTitle("");
-        pdfDoc.setAuthor("");
-        pdfDoc.setSubject("");
-        pdfDoc.setKeywords([]);
-        pdfDoc.setProducer("");
-        pdfDoc.setCreator("");
+      const pdfjsLib = await import("pdfjs-dist");
+      pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+
+      const pdfJsDoc = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      const numPages = pdfJsDoc.numPages;
+
+      const outDoc = await PDFDocument.create();
+
+      for (let i = 1; i <= numPages; i++) {
+        setProgress(Math.round((i / numPages) * 100));
+        const jpegBytes = await renderPageToJpeg(pdfJsDoc, i, dpi, quality);
+        const jpegImage = await outDoc.embedJpg(jpegBytes);
+        const { width, height } = jpegImage.scale(1);
+        const page = outDoc.addPage([width, height]);
+        page.drawImage(jpegImage, { x: 0, y: 0, width, height });
       }
 
-      if (level === "high") {
-        pdfDoc.setCreationDate(new Date(0));
-        pdfDoc.setModificationDate(new Date(0));
-      }
-
-      const saveOptions: Parameters<typeof pdfDoc.save>[0] = {
-        useObjectStreams: true,
-        addDefaultPage: false,
-        objectsPerTick: level === "high" ? 50 : level === "medium" ? 20 : 10,
-      };
-
-      const compressed = await pdfDoc.save(saveOptions);
-      const blob = new Blob([compressed.buffer as ArrayBuffer], { type: "application/pdf" });
-
+      const saved = await outDoc.save({ useObjectStreams: true });
+      const blob = new Blob([saved.buffer as ArrayBuffer], { type: "application/pdf" });
       setResult({ blob, compressedSize: blob.size, originalSize: fileState.originalSize });
     } catch {
-      setError("Could not compress this PDF. It may be encrypted or corrupted.");
+      setError("Could not compress this PDF. It may be corrupted or unsupported.");
     } finally {
       setProcessing(false);
+      setProgress(0);
     }
   };
 
@@ -118,6 +142,7 @@ export default function CompressPDFTool() {
     setFileState(null);
     setResult(null);
     setError(null);
+    setProgress(0);
     if (inputRef.current) inputRef.current.value = "";
   };
 
@@ -139,7 +164,7 @@ export default function CompressPDFTool() {
         >
           <input ref={inputRef} type="file" accept="application/pdf" onChange={onInputChange} className="hidden" />
           <div style={{ marginBottom: 12 }}>
-            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ margin: "0 auto" }}>
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" style={{ margin: "0 auto" }}>
               <rect width="40" height="40" rx="8" fill="rgba(0,88,195,0.08)"/>
               <path d="M20 12v12M14 18l6-6 6 6" stroke="#0058c3" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               <path d="M12 28h16" stroke="#0058c3" strokeWidth="2" strokeLinecap="round"/>
@@ -202,8 +227,20 @@ export default function CompressPDFTool() {
                 </button>
               ))}
             </div>
-            <p style={{ color: "#718096", fontSize: 12, marginTop: 8 }}>{COMPRESSION_LABELS[level]}</p>
+            <p style={{ color: "#718096", fontSize: 12, marginTop: 8 }}>{LEVELS[level].label}</p>
           </div>
+
+          {processing && (
+            <div style={{ marginBottom: 16 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
+                <p style={{ color: "#4a5568", fontSize: 12, fontWeight: 600 }}>Processing pages...</p>
+                <p style={{ color: "#0058c3", fontSize: 12, fontWeight: 700 }}>{progress}%</p>
+              </div>
+              <div style={{ background: "#e5e9eb", borderRadius: 4, height: 4 }}>
+                <div style={{ background: "linear-gradient(135deg, #0058c3, #0070f3)", borderRadius: 4, height: 4, width: `${progress}%`, transition: "width 0.2s ease" }} />
+              </div>
+            </div>
+          )}
 
           <button
             onClick={compress}
