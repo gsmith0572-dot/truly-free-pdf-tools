@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { PDFDocument } from "pdf-lib";
 
 type CompressionLevel = "low" | "medium" | "high";
@@ -22,6 +22,17 @@ const LEVELS: Record<CompressionLevel, { dpi: number; quality: number; label: st
   medium: { dpi: 120, quality: 0.70, label: "Medium — balanced quality and size" },
   high:   { dpi: 96,  quality: 0.50, label: "High — smallest file, reduced quality" },
 };
+
+const PROCESSING_MESSAGES = [
+  "Rendering pages locally...",
+  "Your file never leaves this tab.",
+  "Optimizing PDF structure...",
+  "No upload. No server. Just your browser.",
+  "Compressing image layers...",
+  "Almost there. Processing locally.",
+  "Stripping redundant metadata...",
+  "Your privacy is protected.",
+];
 
 function formatBytes(bytes: number): string {
   if (bytes < 1024) return bytes + " B";
@@ -60,6 +71,78 @@ async function renderPageToJpeg(page: any, dpi: number, quality: number): Promis
   } catch {
     return null;
   }
+}
+
+function ProcessingIndicator({ progress }: { progress: number }) {
+  const [msgIndex, setMsgIndex] = useState(0);
+  const [fade, setFade] = useState(true);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setFade(false);
+      setTimeout(() => {
+        setMsgIndex((i) => (i + 1) % PROCESSING_MESSAGES.length);
+        setFade(true);
+      }, 300);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div style={{ textAlign: "center", padding: "32px 20px" }}>
+      <div style={{ display: "flex", justifyContent: "center", marginBottom: 24 }}>
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <style>{`
+            @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+            @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+            .spinner { animation: spin 1.2s linear infinite; transform-origin: 24px 24px; }
+            .inner-pulse { animation: pulse 1.2s ease-in-out infinite; }
+          `}</style>
+          <circle cx="24" cy="24" r="20" stroke="#e5e9eb" strokeWidth="3" fill="none"/>
+          <path className="spinner" d="M24 4 A20 20 0 0 1 44 24" stroke="url(#grad)" strokeWidth="3" strokeLinecap="round" fill="none"/>
+          <rect className="inner-pulse" x="18" y="18" width="12" height="12" rx="2" fill="rgba(0,88,195,0.15)"/>
+          <path className="inner-pulse" d="M24 20v4M24 26v0" stroke="#0058c3" strokeWidth="2" strokeLinecap="round"/>
+          <defs>
+            <linearGradient id="grad" x1="24" y1="4" x2="44" y2="24" gradientUnits="userSpaceOnUse">
+              <stop stopColor="#0058c3"/>
+              <stop offset="1" stopColor="#0070f3"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+
+      <p
+        style={{
+          fontSize: 14,
+          fontWeight: 600,
+          color: "#181c1e",
+          letterSpacing: "-0.02em",
+          marginBottom: 20,
+          opacity: fade ? 1 : 0,
+          transition: "opacity 0.3s ease",
+          minHeight: 22,
+        }}
+      >
+        {PROCESSING_MESSAGES[msgIndex]}
+      </p>
+
+      <div style={{ background: "#e5e9eb", borderRadius: 4, height: 6, marginBottom: 10, overflow: "hidden" }}>
+        <div
+          style={{
+            background: "linear-gradient(135deg, #0058c3, #0070f3)",
+            borderRadius: 4,
+            height: 6,
+            width: `${progress}%`,
+            transition: "width 0.4s ease",
+          }}
+        />
+      </div>
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <p style={{ fontSize: 11, color: "#718096", letterSpacing: "0.04em" }}>PROCESSING</p>
+        <p style={{ fontSize: 11, color: "#0058c3", fontWeight: 700, letterSpacing: "0.04em" }}>{progress}%</p>
+      </div>
+    </div>
+  );
 }
 
 export default function CompressPDFTool() {
@@ -153,8 +236,7 @@ export default function CompressPDFTool() {
               outPage.drawImage(jpegImage, { x: 0, y: 0, width, height });
               pagesRendered++;
             }
-          } catch {
-          }
+          } catch {}
         }
 
         console.warn = originalWarn;
@@ -166,8 +248,7 @@ export default function CompressPDFTool() {
             bestSize = canvasBytes.byteLength;
           }
         }
-      } catch {
-      }
+      } catch {}
 
       setProgress(100);
 
@@ -245,72 +326,65 @@ export default function CompressPDFTool() {
       )}
 
       {fileState && !result && !error && (
-        <div style={{ background: "#ffffff", borderRadius: 8, padding: 20, boxShadow: "0px 8px 24px rgba(24,28,30,0.06)" }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <div style={{ background: "rgba(0,88,195,0.08)", borderRadius: 6, padding: "6px 10px" }}>
-                <span style={{ color: "#0058c3", fontSize: 11, fontWeight: 700, letterSpacing: "0.08em" }}>PDF</span>
-              </div>
-              <div>
-                <p style={{ color: "#181c1e", fontWeight: 600, fontSize: 14, marginBottom: 2 }}>{fileState.name}</p>
-                <p style={{ color: "#718096", fontSize: 12 }}>{formatBytes(fileState.originalSize)}</p>
-              </div>
-            </div>
-            <button onClick={reset} style={{ color: "#718096", fontSize: 12, background: "none", border: "none", cursor: "pointer", padding: 4 }}>
-              Remove
-            </button>
-          </div>
-
-          <div style={{ marginBottom: 20 }}>
-            <p style={{ color: "#4a5568", fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 10 }}>
-              Compression Level
-            </p>
-            <div style={{ display: "flex", gap: 8 }}>
-              {(["low", "medium", "high"] as CompressionLevel[]).map((l) => (
-                <button
-                  key={l}
-                  onClick={() => setLevel(l)}
-                  style={{
-                    flex: 1,
-                    padding: "10px 8px",
-                    borderRadius: 6,
-                    border: level === l ? "1.5px solid #0058c3" : "1.5px solid rgba(74,85,104,0.15)",
-                    background: level === l ? "rgba(0,88,195,0.06)" : "#f7fafc",
-                    color: level === l ? "#0058c3" : "#4a5568",
-                    fontWeight: level === l ? 700 : 500,
-                    fontSize: 12,
-                    cursor: "pointer",
-                    transition: "all 0.1s ease",
-                    textAlign: "center",
-                  }}
-                >
-                  {l.charAt(0).toUpperCase() + l.slice(1)}
+        <div style={{ background: "#ffffff", borderRadius: 8, boxShadow: "0px 8px 24px rgba(24,28,30,0.06)", overflow: "hidden" }}>
+          {processing ? (
+            <ProcessingIndicator progress={progress} />
+          ) : (
+            <div style={{ padding: 20 }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <div style={{ background: "rgba(0,88,195,0.08)", borderRadius: 6, padding: "6px 10px" }}>
+                    <span style={{ color: "#0058c3", fontSize: 11, fontWeight: 700, letterSpacing: "0.08em" }}>PDF</span>
+                  </div>
+                  <div>
+                    <p style={{ color: "#181c1e", fontWeight: 600, fontSize: 14, marginBottom: 2 }}>{fileState.name}</p>
+                    <p style={{ color: "#718096", fontSize: 12 }}>{formatBytes(fileState.originalSize)}</p>
+                  </div>
+                </div>
+                <button onClick={reset} style={{ color: "#718096", fontSize: 12, background: "none", border: "none", cursor: "pointer", padding: 4 }}>
+                  Remove
                 </button>
-              ))}
-            </div>
-            <p style={{ color: "#718096", fontSize: 12, marginTop: 8 }}>{LEVELS[level].label}</p>
-          </div>
+              </div>
 
-          {processing && (
-            <div style={{ marginBottom: 16 }}>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
-                <p style={{ color: "#4a5568", fontSize: 12, fontWeight: 600 }}>Processing pages...</p>
-                <p style={{ color: "#0058c3", fontSize: 12, fontWeight: 700 }}>{progress}%</p>
+              <div style={{ marginBottom: 20 }}>
+                <p style={{ color: "#4a5568", fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 10 }}>
+                  Compression Level
+                </p>
+                <div style={{ display: "flex", gap: 8 }}>
+                  {(["low", "medium", "high"] as CompressionLevel[]).map((l) => (
+                    <button
+                      key={l}
+                      onClick={() => setLevel(l)}
+                      style={{
+                        flex: 1,
+                        padding: "10px 8px",
+                        borderRadius: 6,
+                        border: level === l ? "1.5px solid #0058c3" : "1.5px solid rgba(74,85,104,0.15)",
+                        background: level === l ? "rgba(0,88,195,0.06)" : "#f7fafc",
+                        color: level === l ? "#0058c3" : "#4a5568",
+                        fontWeight: level === l ? 700 : 500,
+                        fontSize: 12,
+                        cursor: "pointer",
+                        transition: "all 0.1s ease",
+                        textAlign: "center",
+                      }}
+                    >
+                      {l.charAt(0).toUpperCase() + l.slice(1)}
+                    </button>
+                  ))}
+                </div>
+                <p style={{ color: "#718096", fontSize: 12, marginTop: 8 }}>{LEVELS[level].label}</p>
               </div>
-              <div style={{ background: "#e5e9eb", borderRadius: 4, height: 4 }}>
-                <div style={{ background: "linear-gradient(135deg, #0058c3, #0070f3)", borderRadius: 4, height: 4, width: `${progress}%`, transition: "width 0.3s ease" }} />
-              </div>
+
+              <button
+                onClick={compress}
+                className="btn-primary"
+                style={{ width: "100%", padding: "14px 0", fontSize: 15, border: "none", cursor: "pointer" }}
+              >
+                Compress PDF
+              </button>
             </div>
           )}
-
-          <button
-            onClick={compress}
-            disabled={processing}
-            className="btn-primary"
-            style={{ width: "100%", padding: "14px 0", fontSize: 15, border: "none", cursor: processing ? "not-allowed" : "pointer", opacity: processing ? 0.7 : 1 }}
-          >
-            {processing ? "Compressing..." : "Compress PDF"}
-          </button>
         </div>
       )}
 
