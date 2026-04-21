@@ -92,6 +92,24 @@ export default function CompressPDFTool() {
       const { dpi, quality } = LEVELS[level];
       const arrayBuffer = await fileState.file.arrayBuffer();
 
+      const pdfDoc = await PDFDocument.load(arrayBuffer, { ignoreEncryption: true });
+      if (level === "medium" || level === "high") {
+        pdfDoc.setTitle("");
+        pdfDoc.setAuthor("");
+        pdfDoc.setSubject("");
+        pdfDoc.setKeywords([]);
+        pdfDoc.setProducer("");
+        pdfDoc.setCreator("");
+      }
+      if (level === "high") {
+        pdfDoc.setCreationDate(new Date(0));
+        pdfDoc.setModificationDate(new Date(0));
+      }
+      const structBytes = await pdfDoc.save({ useObjectStreams: true, addDefaultPage: false });
+      const structSize = structBytes.byteLength;
+
+      setProgress(10);
+
       const pdfjsLib = await import("pdfjs-dist/legacy/build/pdf.mjs");
       pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
         "pdfjs-dist/legacy/build/pdf.worker.mjs",
@@ -103,7 +121,7 @@ export default function CompressPDFTool() {
       const outDoc = await PDFDocument.create();
 
       for (let i = 1; i <= numPages; i++) {
-        setProgress(Math.round((i / numPages) * 100));
+        setProgress(10 + Math.round((i / numPages) * 85));
         const page = await pdfJsDoc.getPage(i);
         const jpegBytes = await renderPageToJpeg(page, dpi, quality);
         const jpegImage = await outDoc.embedJpg(jpegBytes);
@@ -112,8 +130,20 @@ export default function CompressPDFTool() {
         outPage.drawImage(jpegImage, { x: 0, y: 0, width, height });
       }
 
-      const saved = await outDoc.save({ useObjectStreams: true });
-      const blob = new Blob([saved.buffer as ArrayBuffer], { type: "application/pdf" });
+      const canvasBytes = await outDoc.save({ useObjectStreams: true });
+      const canvasSize = canvasBytes.byteLength;
+
+      setProgress(100);
+
+      const bestBytes = canvasSize < structSize ? canvasBytes : structBytes;
+      const bestSize = Math.min(canvasSize, structSize);
+
+      if (bestSize >= fileState.originalSize) {
+        setError("This PDF is already optimally compressed and cannot be reduced further.");
+        return;
+      }
+
+      const blob = new Blob([bestBytes.buffer as ArrayBuffer], { type: "application/pdf" });
       setResult({ blob, compressedSize: blob.size, originalSize: fileState.originalSize });
     } catch {
       setError("Could not compress this PDF. It may be corrupted or unsupported.");
@@ -175,10 +205,15 @@ export default function CompressPDFTool() {
       {error && (
         <div style={{ background: "rgba(220,38,38,0.06)", borderRadius: 8, padding: "12px 16px" }}>
           <p style={{ color: "#dc2626", fontSize: 13, fontWeight: 500 }}>{error}</p>
+          {fileState && (
+            <button onClick={reset} style={{ color: "#0058c3", fontSize: 12, background: "none", border: "none", cursor: "pointer", padding: "8px 0 0", fontWeight: 600 }}>
+              Try another PDF
+            </button>
+          )}
         </div>
       )}
 
-      {fileState && !result && (
+      {fileState && !result && !error && (
         <div style={{ background: "#ffffff", borderRadius: 8, padding: 20, boxShadow: "0px 8px 24px rgba(24,28,30,0.06)" }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
@@ -232,7 +267,7 @@ export default function CompressPDFTool() {
                 <p style={{ color: "#0058c3", fontSize: 12, fontWeight: 700 }}>{progress}%</p>
               </div>
               <div style={{ background: "#e5e9eb", borderRadius: 4, height: 4 }}>
-                <div style={{ background: "linear-gradient(135deg, #0058c3, #0070f3)", borderRadius: 4, height: 4, width: `${progress}%`, transition: "width 0.2s ease" }} />
+                <div style={{ background: "linear-gradient(135deg, #0058c3, #0070f3)", borderRadius: 4, height: 4, width: `${progress}%`, transition: "width 0.3s ease" }} />
               </div>
             </div>
           )}
