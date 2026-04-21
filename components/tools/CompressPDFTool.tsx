@@ -50,9 +50,7 @@ async function renderPageToJpeg(page: any, dpi: number, quality: number): Promis
   } catch { return null; }
 }
 
-function DataStreamLoader({ progress, currentPage, totalPages }: { progress: number; currentPage: number; totalPages: number }) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animRef = useRef<number>(0);
+function ScanLoader({ progress, currentPage, totalPages }: { progress: number; currentPage: number; totalPages: number }) {
   const [factIndex, setFactIndex] = useState(0);
   const [factVisible, setFactVisible] = useState(true);
 
@@ -64,106 +62,144 @@ function DataStreamLoader({ progress, currentPage, totalPages }: { progress: num
     return () => clearInterval(interval);
   }, []);
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+  const lines = [
+    { width: "85%", top: 28 },
+    { width: "62%", top: 44 },
+    { width: "78%", top: 60 },
+    { width: "55%", top: 76 },
+    { width: "90%", top: 92 },
+    { width: "48%", top: 108 },
+    { width: "73%", top: 124 },
+    { width: "66%", top: 140 },
+    { width: "82%", top: 156 },
+    { width: "59%", top: 172 },
+  ];
 
-    const W = canvas.width = 560;
-    const H = canvas.height = 80;
-
-    interface Particle { x: number; y: number; vx: number; size: number; alpha: number; done: boolean; hue: number; }
-    const particles: Particle[] = [];
-
-    for (let i = 0; i < 40; i++) {
-      particles.push({
-        x: Math.random() * W,
-        y: H * 0.3 + Math.random() * H * 0.4,
-        vx: 0.8 + Math.random() * 2.2,
-        size: 2 + Math.random() * 3,
-        alpha: 0.3 + Math.random() * 0.7,
-        done: Math.random() < progress / 100,
-        hue: 210 + Math.random() * 20,
-      });
-    }
-
-    const draw = () => {
-      ctx.clearRect(0, 0, W, H);
-
-      const grad = ctx.createLinearGradient(0, 0, W, 0);
-      grad.addColorStop(0, "rgba(0,88,195,0)");
-      grad.addColorStop(0.2, "rgba(0,88,195,0.06)");
-      grad.addColorStop(0.8, "rgba(0,112,243,0.06)");
-      grad.addColorStop(1, "rgba(0,112,243,0)");
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, W, H);
-
-      const splitX = (progress / 100) * W;
-
-      particles.forEach(p => {
-        p.x += p.vx;
-        if (p.x > W + 10) p.x = -10;
-        p.done = p.x < splitX;
-
-        const color = p.done
-          ? `rgba(22,163,74,${p.alpha})`
-          : `rgba(0,${Math.floor(88 + (p.x / W) * 60)},${Math.floor(195 + (p.x / W) * 40)},${p.alpha})`;
-
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = color;
-        ctx.fill();
-
-        if (p.size > 3) {
-          ctx.beginPath();
-          ctx.moveTo(p.x - p.vx * 4, p.y);
-          ctx.lineTo(p.x, p.y);
-          ctx.strokeStyle = color.replace(String(p.alpha), String(p.alpha * 0.4));
-          ctx.lineWidth = p.size * 0.5;
-          ctx.stroke();
-        }
-      });
-
-      ctx.beginPath();
-      ctx.moveTo(splitX, 8);
-      ctx.lineTo(splitX, H - 8);
-      ctx.strokeStyle = splitX > 20 ? "rgba(22,163,74,0.5)" : "rgba(0,88,195,0.3)";
-      ctx.lineWidth = 1.5;
-      ctx.setLineDash([4, 4]);
-      ctx.stroke();
-      ctx.setLineDash([]);
-
-      animRef.current = requestAnimationFrame(draw);
-    };
-
-    draw();
-    return () => cancelAnimationFrame(animRef.current);
-  }, [progress]);
+  const scannedLines = lines.filter(l => l.top < (progress / 100) * 200);
 
   return (
-    <div style={{ padding: "28px 24px 24px", textAlign: "center" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-        <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", color: "#718096", textTransform: "uppercase" }}>
-          Processing
-        </span>
-        <span style={{ fontSize: 12, fontWeight: 700, color: "#0058c3" }}>
-          {totalPages > 0 ? `${Math.min(currentPage, totalPages)} / ${totalPages} pages` : "Initializing..."}
-        </span>
-      </div>
-
-      <div style={{ borderRadius: 6, overflow: "hidden", marginBottom: 12, background: "#f1f4f6" }}>
-        <canvas ref={canvasRef} style={{ display: "block", width: "100%", height: 80 }} />
-      </div>
-
-      <div style={{ background: "#e5e9eb", borderRadius: 4, height: 3, marginBottom: 16, overflow: "hidden" }}>
+    <div style={{ padding: "32px 28px 28px", display: "flex", flexDirection: "column", alignItems: "center", gap: 24 }}>
+      <div style={{ position: "relative", width: 160, height: 210 }}>
         <div style={{
-          background: progress > 90 ? "linear-gradient(135deg, #16a34a, #15803d)" : "linear-gradient(135deg, #0058c3, #0070f3)",
-          height: 3,
-          borderRadius: 4,
-          width: `${progress}%`,
-          transition: "width 0.4s ease, background 0.5s ease",
+          width: "100%",
+          height: "100%",
+          background: "#ffffff",
+          borderRadius: 6,
+          border: "1.5px solid #e5e9eb",
+          overflow: "hidden",
+          boxShadow: "0 4px 16px rgba(0,88,195,0.08)",
+          position: "relative",
+        }}>
+          {lines.map((line, i) => (
+            <div
+              key={i}
+              style={{
+                position: "absolute",
+                top: line.top,
+                left: 16,
+                width: line.width,
+                height: 7,
+                borderRadius: 2,
+                background: scannedLines.includes(line) ? "rgba(0,88,195,0.25)" : "#e5e9eb",
+                transition: "background 0.3s ease",
+              }}
+            />
+          ))}
+
+          <div style={{
+            position: "absolute",
+            top: `${progress}%`,
+            left: 0,
+            right: 0,
+            height: 2,
+            background: "rgba(0,112,243,0.9)",
+            boxShadow: "0 0 8px rgba(0,112,243,0.6)",
+            transition: "top 0.4s ease",
+            zIndex: 2,
+          }} />
+
+          <div style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            height: `${progress}%`,
+            background: "linear-gradient(180deg, rgba(0,88,195,0.04) 0%, rgba(0,112,243,0.08) 100%)",
+            transition: "height 0.4s ease",
+            zIndex: 1,
+          }} />
+
+          <div style={{
+            position: "absolute",
+            top: 0,
+            right: 0,
+            width: 0,
+            height: 0,
+            borderStyle: "solid",
+            borderWidth: "0 20px 20px 0",
+            borderColor: "transparent #f1f4f6 transparent transparent",
+            zIndex: 3,
+          }} />
+        </div>
+
+        <div style={{
+          position: "absolute",
+          top: -6,
+          left: -6,
+          width: 16,
+          height: 16,
+          borderTop: "2px solid #0058c3",
+          borderLeft: "2px solid #0058c3",
+          borderRadius: "2px 0 0 0",
         }} />
+        <div style={{
+          position: "absolute",
+          top: -6,
+          right: -6,
+          width: 16,
+          height: 16,
+          borderTop: "2px solid #0058c3",
+          borderRight: "2px solid #0058c3",
+          borderRadius: "0 2px 0 0",
+        }} />
+        <div style={{
+          position: "absolute",
+          bottom: -6,
+          left: -6,
+          width: 16,
+          height: 16,
+          borderBottom: "2px solid #0058c3",
+          borderLeft: "2px solid #0058c3",
+          borderRadius: "0 0 0 2px",
+        }} />
+        <div style={{
+          position: "absolute",
+          bottom: -6,
+          right: -6,
+          width: 16,
+          height: 16,
+          borderBottom: "2px solid #0058c3",
+          borderRight: "2px solid #0058c3",
+          borderRadius: "0 0 2px 0",
+        }} />
+      </div>
+
+      <div style={{ width: "100%", maxWidth: 260 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+          <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", color: "#718096", textTransform: "uppercase" }}>
+            {totalPages > 0 ? `Page ${Math.min(currentPage, totalPages)} of ${totalPages}` : "Initializing..."}
+          </span>
+          <span style={{ fontSize: 12, fontWeight: 700, color: "#0058c3" }}>{progress}%</span>
+        </div>
+        <div style={{ background: "#e5e9eb", borderRadius: 3, height: 3, overflow: "hidden" }}>
+          <div style={{
+            background: progress > 90 ? "linear-gradient(90deg, #0058c3, #16a34a)" : "linear-gradient(90deg, #0058c3, #0070f3)",
+            height: 3,
+            borderRadius: 3,
+            width: `${progress}%`,
+            transition: "width 0.4s ease, background 0.5s ease",
+          }} />
+        </div>
       </div>
 
       <p style={{
@@ -175,6 +211,7 @@ function DataStreamLoader({ progress, currentPage, totalPages }: { progress: num
         transition: "opacity 0.35s ease",
         minHeight: 18,
         margin: 0,
+        textAlign: "center",
       }}>
         {FACTS[factIndex]}
       </p>
@@ -337,7 +374,7 @@ export default function CompressPDFTool() {
       {fileState && !result && !error && (
         <div style={{ background: "#ffffff", borderRadius: 8, boxShadow: "0px 8px 24px rgba(24,28,30,0.06)", overflow: "hidden" }}>
           {processing ? (
-            <DataStreamLoader progress={progress} currentPage={currentPage} totalPages={totalPages} />
+            <ScanLoader progress={progress} currentPage={currentPage} totalPages={totalPages} />
           ) : (
             <div style={{ padding: 20 }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
