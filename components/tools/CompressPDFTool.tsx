@@ -2,12 +2,6 @@
 
 import { useState, useRef, useCallback } from "react";
 import { PDFDocument } from "pdf-lib";
-import * as pdfjsLib from "pdfjs-dist";
-
-pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
-  "pdfjs-dist/build/pdf.worker.min.mjs",
-  import.meta.url
-).toString();
 
 type CompressionLevel = "low" | "medium" | "high";
 
@@ -40,13 +34,7 @@ function reductionPct(original: number, compressed: number): string {
   return pct.toFixed(1) + "%";
 }
 
-async function renderPageToJpeg(
-  pdfJsDoc: any,
-  pageNum: number,
-  dpi: number,
-  quality: number
-): Promise<Uint8Array> {
-  const page = await pdfJsDoc.getPage(pageNum);
+async function renderPageToJpeg(page: any, dpi: number, quality: number): Promise<Uint8Array> {
   const scale = dpi / 72;
   const viewport = page.getViewport({ scale });
   const canvas = document.createElement("canvas");
@@ -56,9 +44,7 @@ async function renderPageToJpeg(
   await page.render({ canvasContext: ctx, viewport }).promise;
   return new Promise((resolve) => {
     canvas.toBlob(
-      (blob) => {
-        blob!.arrayBuffer().then((buf) => resolve(new Uint8Array(buf)));
-      },
+      (blob) => { blob!.arrayBuffer().then((buf) => resolve(new Uint8Array(buf))); },
       "image/jpeg",
       quality
     );
@@ -105,23 +91,31 @@ export default function CompressPDFTool() {
     try {
       const { dpi, quality } = LEVELS[level];
       const arrayBuffer = await fileState.file.arrayBuffer();
-      const pdfJsDoc = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+
+      const pdfjsLib = await import("pdfjs-dist/legacy/build/pdf.mjs");
+      pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
+        "pdfjs-dist/legacy/build/pdf.worker.mjs",
+        import.meta.url
+      ).toString();
+
+      const pdfJsDoc = await pdfjsLib.getDocument({ data: new Uint8Array(arrayBuffer) }).promise;
       const numPages = pdfJsDoc.numPages;
       const outDoc = await PDFDocument.create();
 
       for (let i = 1; i <= numPages; i++) {
         setProgress(Math.round((i / numPages) * 100));
-        const jpegBytes = await renderPageToJpeg(pdfJsDoc, i, dpi, quality);
+        const page = await pdfJsDoc.getPage(i);
+        const jpegBytes = await renderPageToJpeg(page, dpi, quality);
         const jpegImage = await outDoc.embedJpg(jpegBytes);
         const { width, height } = jpegImage.scale(1);
-        const page = outDoc.addPage([width, height]);
-        page.drawImage(jpegImage, { x: 0, y: 0, width, height });
+        const outPage = outDoc.addPage([width, height]);
+        outPage.drawImage(jpegImage, { x: 0, y: 0, width, height });
       }
 
       const saved = await outDoc.save({ useObjectStreams: true });
       const blob = new Blob([saved.buffer as ArrayBuffer], { type: "application/pdf" });
       setResult({ blob, compressedSize: blob.size, originalSize: fileState.originalSize });
-    } catch (err) {
+    } catch {
       setError("Could not compress this PDF. It may be corrupted or unsupported.");
     } finally {
       setProcessing(false);
