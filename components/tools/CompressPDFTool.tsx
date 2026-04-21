@@ -16,7 +16,7 @@ const LEVELS: Record<CompressionLevel, { dpi: number; quality: number; label: st
 const FACTS = [
   "Your file never leaves this browser tab.",
   "Zero uploads. Zero servers. Zero risk.",
-  "WebAssembly runs the compression on your device.",
+  "WebAssembly runs on your device.",
   "When you close this tab, all data is gone.",
   "No account. No email. No trace.",
 ];
@@ -50,9 +50,27 @@ async function renderPageToJpeg(page: any, dpi: number, quality: number): Promis
   } catch { return null; }
 }
 
-function ScanLoader({ progress, currentPage, totalPages }: { progress: number; currentPage: number; totalPages: number }) {
+function ScanLoader({ realProgress, currentPage, totalPages }: { realProgress: number; currentPage: number; totalPages: number }) {
+  const [displayProgress, setDisplayProgress] = useState(0);
   const [factIndex, setFactIndex] = useState(0);
   const [factVisible, setFactVisible] = useState(true);
+  const displayRef = useRef(0);
+  const targetRef = useRef(realProgress);
+
+  useEffect(() => { targetRef.current = realProgress; }, [realProgress]);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      const current = displayRef.current;
+      const target = targetRef.current;
+      const diff = target - current;
+      const step = diff > 0 ? Math.max(0.4, diff * 0.06) : 0;
+      const next = Math.min(current + step, 100);
+      displayRef.current = next;
+      setDisplayProgress(Math.round(next));
+    }, 50);
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -63,125 +81,95 @@ function ScanLoader({ progress, currentPage, totalPages }: { progress: number; c
   }, []);
 
   const lines = [
-    { width: "85%", top: 28 },
-    { width: "62%", top: 44 },
-    { width: "78%", top: 60 },
-    { width: "55%", top: 76 },
-    { width: "90%", top: 92 },
-    { width: "48%", top: 108 },
-    { width: "73%", top: 124 },
-    { width: "66%", top: 140 },
-    { width: "82%", top: 156 },
-    { width: "59%", top: 172 },
+    { width: "82%", top: 22 }, { width: "60%", top: 38 }, { width: "75%", top: 54 },
+    { width: "50%", top: 70 }, { width: "88%", top: 86 }, { width: "45%", top: 102 },
+    { width: "70%", top: 118 }, { width: "63%", top: 134 }, { width: "80%", top: 150 }, { width: "55%", top: 166 },
   ];
 
-  const scannedLines = lines.filter(l => l.top < (progress / 100) * 200);
+  const scanY = (displayProgress / 100) * 195;
 
   return (
     <div style={{ padding: "32px 28px 28px", display: "flex", flexDirection: "column", alignItems: "center", gap: 24 }}>
+      <style>{`
+        @keyframes scanGlow {
+          0%, 100% { opacity: 0.7; box-shadow: 0 0 6px rgba(0,112,243,0.4); }
+          50% { opacity: 1; box-shadow: 0 0 12px rgba(0,112,243,0.8); }
+        }
+        @keyframes cornerPulse {
+          0%, 100% { opacity: 0.5; }
+          50% { opacity: 1; }
+        }
+      `}</style>
+
       <div style={{ position: "relative", width: 160, height: 210 }}>
         <div style={{
-          width: "100%",
-          height: "100%",
-          background: "#ffffff",
-          borderRadius: 6,
-          border: "1.5px solid #e5e9eb",
-          overflow: "hidden",
-          boxShadow: "0 4px 16px rgba(0,88,195,0.08)",
+          width: "100%", height: "100%",
+          background: "#ffffff", borderRadius: 6,
+          border: "1.5px solid #e5e9eb", overflow: "hidden",
+          boxShadow: "0 4px 20px rgba(0,88,195,0.1)",
           position: "relative",
         }}>
-          {lines.map((line, i) => (
-            <div
-              key={i}
-              style={{
-                position: "absolute",
-                top: line.top,
-                left: 16,
-                width: line.width,
-                height: 7,
-                borderRadius: 2,
-                background: scannedLines.includes(line) ? "rgba(0,88,195,0.25)" : "#e5e9eb",
-                transition: "background 0.3s ease",
-              }}
-            />
-          ))}
+          {lines.map((line, i) => {
+            const lineCenter = line.top + 3.5;
+            const isDone = lineCenter < scanY;
+            return (
+              <div key={i} style={{
+                position: "absolute", top: line.top, left: 16,
+                width: line.width, height: 7, borderRadius: 2,
+                background: isDone ? "rgba(0,88,195,0.3)" : "#ececec",
+                transition: "background 0.2s ease",
+              }} />
+            );
+          })}
+
+          <div style={{
+            position: "absolute", top: 0, left: 0, right: 0,
+            height: `${(displayProgress / 100) * 100}%`,
+            background: "linear-gradient(180deg, rgba(0,88,195,0.03) 0%, rgba(0,112,243,0.07) 100%)",
+            transition: "height 0.08s linear",
+          }} />
 
           <div style={{
             position: "absolute",
-            top: `${progress}%`,
-            left: 0,
-            right: 0,
-            height: 2,
-            background: "rgba(0,112,243,0.9)",
-            boxShadow: "0 0 8px rgba(0,112,243,0.6)",
-            transition: "top 0.4s ease",
+            top: `${(displayProgress / 100) * 195}px`,
+            left: 0, right: 0, height: 2,
+            background: "rgba(0,112,243,0.95)",
+            animation: "scanGlow 1.2s ease-in-out infinite",
+            transition: "top 0.08s linear",
+            zIndex: 3,
+          }} />
+
+          <div style={{
+            position: "absolute",
+            top: `${(displayProgress / 100) * 195}px`,
+            left: 0, right: 0, height: 20,
+            background: "linear-gradient(180deg, rgba(0,112,243,0.12) 0%, transparent 100%)",
+            transition: "top 0.08s linear",
             zIndex: 2,
           }} />
 
-          <div style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-            height: `${progress}%`,
-            background: "linear-gradient(180deg, rgba(0,88,195,0.04) 0%, rgba(0,112,243,0.08) 100%)",
-            transition: "height 0.4s ease",
-            zIndex: 1,
-          }} />
-
-          <div style={{
-            position: "absolute",
-            top: 0,
-            right: 0,
-            width: 0,
-            height: 0,
-            borderStyle: "solid",
-            borderWidth: "0 20px 20px 0",
-            borderColor: "transparent #f1f4f6 transparent transparent",
-            zIndex: 3,
-          }} />
+          <div style={{ position: "absolute", top: 0, right: 0, width: 0, height: 0, borderStyle: "solid", borderWidth: "0 18px 18px 0", borderColor: "transparent #f1f4f6 transparent transparent", zIndex: 4 }} />
         </div>
 
-        <div style={{
-          position: "absolute",
-          top: -6,
-          left: -6,
-          width: 16,
-          height: 16,
-          borderTop: "2px solid #0058c3",
-          borderLeft: "2px solid #0058c3",
-          borderRadius: "2px 0 0 0",
-        }} />
-        <div style={{
-          position: "absolute",
-          top: -6,
-          right: -6,
-          width: 16,
-          height: 16,
-          borderTop: "2px solid #0058c3",
-          borderRight: "2px solid #0058c3",
-          borderRadius: "0 2px 0 0",
-        }} />
-        <div style={{
-          position: "absolute",
-          bottom: -6,
-          left: -6,
-          width: 16,
-          height: 16,
-          borderBottom: "2px solid #0058c3",
-          borderLeft: "2px solid #0058c3",
-          borderRadius: "0 0 0 2px",
-        }} />
-        <div style={{
-          position: "absolute",
-          bottom: -6,
-          right: -6,
-          width: 16,
-          height: 16,
-          borderBottom: "2px solid #0058c3",
-          borderRight: "2px solid #0058c3",
-          borderRadius: "0 0 2px 0",
-        }} />
+        {[
+          { top: -6, left: -6, borderTop: true, borderLeft: true, br: "2px 0 0 0" },
+          { top: -6, right: -6, borderTop: true, borderRight: true, br: "0 2px 0 0" },
+          { bottom: -6, left: -6, borderBottom: true, borderLeft: true, br: "0 0 0 2px" },
+          { bottom: -6, right: -6, borderBottom: true, borderRight: true, br: "0 0 2px 0" },
+        ].map((c, i) => (
+          <div key={i} style={{
+            position: "absolute",
+            top: c.top, left: (c as any).left, right: (c as any).right, bottom: c.bottom,
+            width: 14, height: 14,
+            borderTop: c.borderTop ? "2px solid #0058c3" : undefined,
+            borderBottom: c.borderBottom ? "2px solid #0058c3" : undefined,
+            borderLeft: c.borderLeft ? "2px solid #0058c3" : undefined,
+            borderRight: c.borderRight ? "2px solid #0058c3" : undefined,
+            borderRadius: c.br,
+            animation: "cornerPulse 1.8s ease-in-out infinite",
+            animationDelay: `${i * 0.15}s`,
+          }} />
+        ))}
       </div>
 
       <div style={{ width: "100%", maxWidth: 260 }}>
@@ -189,29 +177,24 @@ function ScanLoader({ progress, currentPage, totalPages }: { progress: number; c
           <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", color: "#718096", textTransform: "uppercase" }}>
             {totalPages > 0 ? `Page ${Math.min(currentPage, totalPages)} of ${totalPages}` : "Initializing..."}
           </span>
-          <span style={{ fontSize: 12, fontWeight: 700, color: "#0058c3" }}>{progress}%</span>
+          <span style={{ fontSize: 12, fontWeight: 700, color: "#0058c3" }}>{displayProgress}%</span>
         </div>
         <div style={{ background: "#e5e9eb", borderRadius: 3, height: 3, overflow: "hidden" }}>
           <div style={{
-            background: progress > 90 ? "linear-gradient(90deg, #0058c3, #16a34a)" : "linear-gradient(90deg, #0058c3, #0070f3)",
-            height: 3,
-            borderRadius: 3,
-            width: `${progress}%`,
-            transition: "width 0.4s ease, background 0.5s ease",
+            background: displayProgress > 90 ? "linear-gradient(90deg, #0058c3, #16a34a)" : "linear-gradient(90deg, #0058c3, #0070f3)",
+            height: 3, borderRadius: 3,
+            width: `${displayProgress}%`,
+            transition: "width 0.08s linear, background 0.5s ease",
           }} />
         </div>
       </div>
 
       <p style={{
-        fontSize: 12,
-        fontWeight: 600,
-        color: "#0058c3",
-        letterSpacing: "-0.01em",
+        fontSize: 12, fontWeight: 600, color: "#0058c3",
+        letterSpacing: "-0.01em", textAlign: "center",
         opacity: factVisible ? 1 : 0,
         transition: "opacity 0.35s ease",
-        minHeight: 18,
-        margin: 0,
-        textAlign: "center",
+        minHeight: 18, margin: 0,
       }}>
         {FACTS[factIndex]}
       </p>
@@ -223,7 +206,7 @@ export default function CompressPDFTool() {
   const [fileState, setFileState] = useState<FileState | null>(null);
   const [level, setLevel] = useState<CompressionLevel>("medium");
   const [processing, setProcessing] = useState(false);
-  const [progress, setProgress] = useState(0);
+  const [realProgress, setRealProgress] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [result, setResult] = useState<ResultState | null>(null);
@@ -250,7 +233,7 @@ export default function CompressPDFTool() {
 
   const compress = async () => {
     if (!fileState) return;
-    setProcessing(true); setProgress(0); setCurrentPage(0); setTotalPages(0); setError(null);
+    setProcessing(true); setRealProgress(5); setCurrentPage(0); setTotalPages(0); setError(null);
     try {
       const { dpi, quality } = LEVELS[level];
       const arrayBuffer = await fileState.file.arrayBuffer();
@@ -264,7 +247,7 @@ export default function CompressPDFTool() {
         pdfDoc.setCreationDate(new Date(0)); pdfDoc.setModificationDate(new Date(0));
       }
       const structBytes = await pdfDoc.save({ useObjectStreams: true, addDefaultPage: false });
-      setProgress(10);
+      setRealProgress(15);
 
       let bestBytes: Uint8Array = structBytes;
       let bestSize: number = structBytes.byteLength;
@@ -277,7 +260,7 @@ export default function CompressPDFTool() {
 
         const pdfJsDoc = await pdfjsLib.getDocument({ data: new Uint8Array(arrayBuffer), verbosity: 0 }).promise;
         const numPages = pdfJsDoc.numPages;
-        const MAX_CANVAS_PAGES = 10;
+        const MAX_CANVAS_PAGES = 5;
         const pagesToRender = Math.min(numPages, MAX_CANVAS_PAGES);
         setTotalPages(pagesToRender);
 
@@ -286,7 +269,7 @@ export default function CompressPDFTool() {
 
         for (let i = 1; i <= pagesToRender; i++) {
           setCurrentPage(i);
-          setProgress(10 + Math.round((i / pagesToRender) * 80));
+          setRealProgress(15 + Math.round((i / pagesToRender) * 80));
           try {
             const page = await pdfJsDoc.getPage(i);
             const jpegBytes = await renderPageToJpeg(page, dpi, quality);
@@ -308,7 +291,7 @@ export default function CompressPDFTool() {
         }
       } catch {}
 
-      setProgress(100);
+      setRealProgress(100);
 
       if (bestSize >= fileState.originalSize) {
         setError("This PDF is already fully optimized and cannot be reduced further.");
@@ -320,7 +303,7 @@ export default function CompressPDFTool() {
     } catch {
       setError("Could not compress this PDF. It may be corrupted or unsupported.");
     } finally {
-      setProcessing(false); setProgress(0); setCurrentPage(0); setTotalPages(0);
+      setProcessing(false); setRealProgress(0); setCurrentPage(0); setTotalPages(0);
     }
   };
 
@@ -336,7 +319,7 @@ export default function CompressPDFTool() {
 
   const reset = () => {
     setFileState(null); setResult(null); setError(null);
-    setProgress(0); setCurrentPage(0); setTotalPages(0);
+    setRealProgress(0); setCurrentPage(0); setTotalPages(0);
     if (inputRef.current) inputRef.current.value = "";
   };
 
@@ -374,7 +357,7 @@ export default function CompressPDFTool() {
       {fileState && !result && !error && (
         <div style={{ background: "#ffffff", borderRadius: 8, boxShadow: "0px 8px 24px rgba(24,28,30,0.06)", overflow: "hidden" }}>
           {processing ? (
-            <ScanLoader progress={progress} currentPage={currentPage} totalPages={totalPages} />
+            <ScanLoader realProgress={realProgress} currentPage={currentPage} totalPages={totalPages} />
           ) : (
             <div style={{ padding: 20 }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
