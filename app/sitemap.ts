@@ -27,5 +27,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/free-pdf-tools-no-subscription`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
     { url: `${base}/smallpdf-alternative-free`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
     { url: `${base}/ilovepdf-alternative-free`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${base}/blog`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
+    { url: `${base}/blog/compress-pdf-without-losing-quality`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${base}/blog/ilovepdf-alternative-free-unlimited`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${base}/blog/why-smallpdf-limits-free-users`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
   ]
 }
