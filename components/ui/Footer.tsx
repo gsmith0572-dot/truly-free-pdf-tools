@@ -13,6 +13,7 @@ export default function Footer() {
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             <Link href="/about" style={{ fontSize: 14, color: "#4a5568", textDecoration: "none", letterSpacing: "-0.02em" }}>About Us</Link>
             <Link href="/how-it-works" style={{ fontSize: 14, color: "#4a5568", textDecoration: "none", letterSpacing: "-0.02em" }}>How It Works</Link>
+            <Link href="/blog" style={{ fontSize: 14, color: "#4a5568", textDecoration: "none", letterSpacing: "-0.02em" }}>Blog</Link>
             <Link href="/feedback" style={{ fontSize: 14, color: "#4a5568", textDecoration: "none", letterSpacing: "-0.02em" }}>Feedback</Link>
             <a href="https://klickify.agency" target="_blank" rel="noopener noreferrer" style={{ fontSize: 14, color: "#4a5568", textDecoration: "none", letterSpacing: "-0.02em" }}>Klickify Agency</a>
           </div>

@@ -9,6 +9,7 @@ const navLinks = [
   { href: "/split-pdf", label: "Split" },
   { href: "/pdf-to-word", label: "PDF to Word" },
   { href: "/remove-pdf-password", label: "Unlock" },
+  { href: "/blog", label: "Blog" },
 ];
 
 export default function Navbar() {
