@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import ArticleWrapper from "../../../components/blog/ArticleWrapper";
+import AuthorBox from "@/components/blog/AuthorBox";
 
 export const metadata: Metadata = {
   title: "Herramientas PDF Gratis 2026 — Sin Limite de Tareas, Sin Suscripcion",
@@ -61,7 +62,9 @@ export default function HerramientasPDFGratis() {
         <p>iLovePDF agrega marcas de agua a las salidas de ciertas herramientas de conversion en el nivel gratuito. Las operaciones de compresion y union generalmente no agregan marcas de agua. Las conversiones de formato como PDF a Word pueden incluir la marca de iLovePDF en el archivo gratuito.</p>
         <h3>Puedo usar herramientas PDF gratis sin crear una cuenta?</h3>
         <p>Si. TrulyFreeTools no requiere cuenta, correo electronico ni registro para ninguna operacion. PDF24 tambien funciona sin cuenta.</p>
-      </ArticleWrapper>
+      
+      <AuthorBox />
+    </ArticleWrapper>
     </>
   );
 }

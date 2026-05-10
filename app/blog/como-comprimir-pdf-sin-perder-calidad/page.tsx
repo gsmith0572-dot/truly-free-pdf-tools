@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import AuthorBox from "@/components/blog/AuthorBox";
 
 export const metadata: Metadata = {
   title: "Como Comprimir un PDF sin Perder Calidad — Gratis, Sin Subir Archivos",
@@ -235,7 +236,9 @@ export default function ComoComprimirPDFSinPerderCalidad() {
             </a>
           </p>
         </div>
-      </main>
+      
+      <AuthorBox />
+    </main>
     </>
   );
 }

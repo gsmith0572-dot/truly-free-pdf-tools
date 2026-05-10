@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import ArticleWrapper from "../../../components/blog/ArticleWrapper";
+import AuthorBox from "@/components/blog/AuthorBox";
 export const metadata: Metadata = { title: "PDF Statistics 2026: Usage, Market Size, and File Trends", description: "Comprehensive PDF statistics for 2026: global usage data, market size, file size benchmarks, compression rates, and how people actually use PDF tools online.", alternates: { canonical: "https://trulyfreetools.com/blog/pdf-statistics-2026" } };
 export default function PDFStatistics2026Page() {
   const s = { "@context": "https://schema.org", "@type": "Article", headline: "PDF Statistics 2026: Usage, Market Size, and File Trends", datePublished: "2026-05-05", dateModified: "2026-05-05", author: { "@type": "Organization", name: "TrulyFreeTools" }, publisher: { "@type": "Organization", name: "TrulyFreeTools", url: "https://trulyfreetools.com" }, mainEntityOfPage: "https://trulyfreetools.com/blog/pdf-statistics-2026" };
@@ -54,6 +55,8 @@ export default function PDFStatistics2026Page() {
       <p>By search volume: compress PDF (450K monthly searches), merge PDF (380K), PDF to Word conversion (290K), split PDF (200K), and remove PDF password (180K). Compression is the single most searched document operation category online.</p>
       <h3>What percentage of internet users use PDF tools monthly?</h3>
       <p>Search volume data for PDF tool queries exceeds 50 million monthly searches globally. Smallpdf and iLovePDF together claim over 65 million combined monthly active users, though these figures include significant overlap.</p>
+    
+      <AuthorBox />
     </ArticleWrapper>
   </>);
 }

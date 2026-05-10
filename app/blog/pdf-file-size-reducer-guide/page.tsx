@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import ArticleWrapper from "../../../components/blog/ArticleWrapper";
+import AuthorBox from "@/components/blog/AuthorBox";
 export const metadata: Metadata = { title: "How to Reduce PDF File Size Free — Complete 2026 Guide", description: "The complete guide to reducing PDF file size in 2026. Covers every method from browser-based compression to source-level fixes, with expected results by document type.", alternates: { canonical: "https://trulyfreetools.com/blog/pdf-file-size-reducer-guide" } };
 export default function PDFFileSizeReducerGuide() {
   const s = { "@context": "https://schema.org", "@type": "Article", headline: "How to Reduce PDF File Size Free — Complete 2026 Guide", datePublished: "2026-05-05", dateModified: "2026-05-05", author: { "@type": "Organization", name: "TrulyFreeTools" }, publisher: { "@type": "Organization", name: "TrulyFreeTools", url: "https://trulyfreetools.com" }, mainEntityOfPage: "https://trulyfreetools.com/blog/pdf-file-size-reducer-guide" };
@@ -54,6 +55,8 @@ export default function PDFFileSizeReducerGuide() {
       <p>Structural compression does not reduce quality — it removes internal redundancy without touching visible content. Image compression reduces embedded image resolution, which can affect sharpness for photographs and detailed graphics. Text quality is never affected because text in PDFs is stored as vector data, not pixels.</p>
       <h3>Why is my PDF still large after compression?</h3>
       <p>If compression produces little reduction, the PDF is likely already well-optimized, contains mostly vector graphics with minimal raster images, or contains images already compressed at low quality. Already-compressed PDFs cannot be meaningfully reduced further. If the file is large despite minimal image content, full font file embedding rather than subsetting may be the cause — this requires fixing at the source document level.</p>
+    
+      <AuthorBox />
     </ArticleWrapper>
   </>);
 }

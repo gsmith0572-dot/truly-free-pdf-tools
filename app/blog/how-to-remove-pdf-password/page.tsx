@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import ArticleWrapper from "../../../components/blog/ArticleWrapper";
+import AuthorBox from "@/components/blog/AuthorBox";
 export const metadata: Metadata = { title: "How to Remove a PDF Password Free — Unlock PDF Without Upload", description: "Step-by-step guide to removing PDF passwords for free in 2026. Explains the difference between open passwords and permissions passwords, and which tools handle each case.", alternates: { canonical: "https://trulyfreetools.com/blog/how-to-remove-pdf-password" } };
 export default function HowToRemovePDFPassword() {
   const s = { "@context": "https://schema.org", "@type": "Article", headline: "How to Remove a PDF Password Free — Unlock PDF Without Upload", datePublished: "2026-05-05", dateModified: "2026-05-05", author: { "@type": "Organization", name: "TrulyFreeTools" }, publisher: { "@type": "Organization", name: "TrulyFreeTools", url: "https://trulyfreetools.com" }, mainEntityOfPage: "https://trulyfreetools.com/blog/how-to-remove-pdf-password" };
@@ -52,6 +53,8 @@ export default function HowToRemovePDFPassword() {
       <p>Removing a password from a PDF you own or are authorized to modify is legal. Using password removal to access content you are not authorized to view, or to bypass copy protection on commercially distributed content, may violate copyright law or computer fraud statutes in your jurisdiction.</p>
       <h3>Why can I open a PDF but still cannot print or copy from it?</h3>
       <p>A permissions password is restricting those actions. The file opens because there is no open password encrypting the content — but the permissions layer blocks printing, copying, and editing. Use <a href="/remove-pdf-password">TrulyFreeTools Remove PDF Password</a> to strip the permissions restrictions. No password entry is required for permissions-only restrictions.</p>
+    
+      <AuthorBox />
     </ArticleWrapper>
   </>);
 }

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import ArticleWrapper from "../../../components/blog/ArticleWrapper";
+import AuthorBox from "@/components/blog/AuthorBox";
 export const metadata: Metadata = { title: "How to Merge PDF Files Free — No Upload, No Watermark, No Limit", description: "Step-by-step guide to merging PDF files for free in 2026. Compare browser-based, desktop, and mobile methods. No watermarks, no daily limits, no file uploads required.", alternates: { canonical: "https://trulyfreetools.com/blog/how-to-merge-pdf-free" } };
 export default function HowToMergePDFFree() {
   const s = { "@context": "https://schema.org", "@type": "Article", headline: "How to Merge PDF Files Free — No Upload, No Watermark, No Limit", datePublished: "2026-05-05", dateModified: "2026-05-05", author: { "@type": "Organization", name: "TrulyFreeTools" }, publisher: { "@type": "Organization", name: "TrulyFreeTools", url: "https://trulyfreetools.com" }, mainEntityOfPage: "https://trulyfreetools.com/blog/how-to-merge-pdf-free" };
@@ -50,6 +51,8 @@ export default function HowToMergePDFFree() {
       <p>Yes, two ways. macOS Preview includes built-in merge capability — open a PDF, enable Thumbnails, and drag additional PDFs into the sidebar. Save with Export as PDF. Alternatively, TrulyFreeTools Merge PDF works in any browser on Mac with no install and no upload.</p>
       <h3>Can I rearrange pages when merging PDFs?</h3>
       <p>Most merge tools let you reorder files before merging. TrulyFreeTools lets you drag files into the desired sequence. For page-level reordering within a single document, use a split tool to extract specific pages then re-merge in the desired order.</p>
+    
+      <AuthorBox />
     </ArticleWrapper>
   </>);
 }

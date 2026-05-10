@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import ArticleWrapper from "../../../components/blog/ArticleWrapper";
+import AuthorBox from "@/components/blog/AuthorBox";
 
 export const metadata: Metadata = {
   title: "Why Smallpdf Limits Free Users to 2 Tasks Per Day (And What To Do About It)",
@@ -94,7 +95,9 @@ export default function WhySmallpdfLimitsPage() {
         <p>Smallpdf uploads your files to their servers for processing. They state files are deleted after one hour for free users. Your document does leave your device and is handled by third-party infrastructure during processing.</p>
         <h3>How much does Smallpdf Pro cost?</h3>
         <p>Smallpdf Pro costs approximately $12 per month billed annually or $18 per month on a monthly plan. This unlocks unlimited tasks, e-signing, cloud integrations, and batch processing features.</p>
-      </ArticleWrapper>
+      
+      <AuthorBox />
+    </ArticleWrapper>
     </>
   );
 }

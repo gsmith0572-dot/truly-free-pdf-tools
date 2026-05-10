@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import ArticleWrapper from "../../../components/blog/ArticleWrapper";
+import AuthorBox from "@/components/blog/AuthorBox";
 export const metadata: Metadata = { title: "How to Split a PDF Free — Extract Pages Without Uploading", description: "Step-by-step guide to splitting PDF files for free in 2026. Extract specific pages, split by range, or separate every page. No upload, no watermark, no account required.", alternates: { canonical: "https://trulyfreetools.com/blog/how-to-split-pdf-free" } };
 export default function HowToSplitPDFFree() {
   const s = { "@context": "https://schema.org", "@type": "Article", headline: "How to Split a PDF Free — Extract Pages Without Uploading", datePublished: "2026-05-05", dateModified: "2026-05-05", author: { "@type": "Organization", name: "TrulyFreeTools" }, publisher: { "@type": "Organization", name: "TrulyFreeTools", url: "https://trulyfreetools.com" }, mainEntityOfPage: "https://trulyfreetools.com/blog/how-to-split-pdf-free" };
@@ -48,6 +49,8 @@ export default function HowToSplitPDFFree() {
       <p>macOS Preview handles PDF splitting natively. Open the PDF in Preview, go to View and select Thumbnails, select the page thumbnails using Command-click or Shift-click, then drag the selection to your Desktop. macOS creates a new PDF from the selected pages — no download or install required.</p>
       <h3>Can I split a password-protected PDF?</h3>
       <p>A PDF with permissions restrictions may block splitting in some tools. Remove the permissions password first using <a href="/remove-pdf-password">TrulyFreeTools Remove PDF Password</a>, then split the unlocked file. A PDF with an open password requires you to enter that password before any tool can access the content.</p>
+    
+      <AuthorBox />
     </ArticleWrapper>
   </>);
 }

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import ArticleWrapper from "../../../components/blog/ArticleWrapper";
+import AuthorBox from "@/components/blog/AuthorBox";
 
 export const metadata: Metadata = {
   title: "iLovePDF Alternative: Free PDF Tools With No Limits, No Watermarks, No Upload",
@@ -89,7 +90,9 @@ export default function IlovepdfAlternativePage() {
         <p>Yes. iLovePDF processes files on remote servers. Your PDF is uploaded, processed, and then deleted after approximately two hours. For sensitive documents, this means your file leaves your device and is handled by third-party infrastructure during processing.</p>
         <h3>Can I use iLovePDF without creating an account?</h3>
         <p>Yes, iLovePDF allows limited use without an account. Basic tools are accessible without registration. However, certain features, higher task limits, and all Premium capabilities require a registered account.</p>
-      </ArticleWrapper>
+      
+      <AuthorBox />
+    </ArticleWrapper>
     </>
   );
 }

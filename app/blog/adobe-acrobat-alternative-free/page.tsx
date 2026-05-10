@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import ArticleWrapper from "../../../components/blog/ArticleWrapper";
+import AuthorBox from "@/components/blog/AuthorBox";
 export const metadata: Metadata = { title: "Free Adobe Acrobat Alternatives 2026 — No Subscription Required", description: "Adobe Acrobat costs up to $19.99 per month. These free alternatives handle PDF compression, merging, splitting, and conversion with no subscription and no file size limits.", alternates: { canonical: "https://trulyfreetools.com/blog/adobe-acrobat-alternative-free" } };
 export default function AdobeAcrobatAlternativePage() {
   const s = { "@context": "https://schema.org", "@type": "Article", headline: "Free Adobe Acrobat Alternatives 2026 — No Subscription Required", datePublished: "2026-05-05", dateModified: "2026-05-05", author: { "@type": "Organization", name: "TrulyFreeTools" }, publisher: { "@type": "Organization", name: "TrulyFreeTools", url: "https://trulyfreetools.com" }, mainEntityOfPage: "https://trulyfreetools.com/blog/adobe-acrobat-alternative-free" };
@@ -53,6 +54,8 @@ export default function AdobeAcrobatAlternativePage() {
       <p>Adobe Acrobat Reader is free for viewing, annotating, filling forms, and basic signing. It does not include compression, merging, splitting, format conversion, text editing, or any substantive PDF manipulation. Those features require Acrobat Standard or Pro subscriptions.</p>
       <h3>What free tool can compress PDFs like Adobe Acrobat?</h3>
       <p>TrulyFreeTools compresses PDFs in your browser with no upload using dual-method compression — structural optimization and image resampling — delivering the smaller result. Output quality is comparable to Acrobat standard compression for most documents used in email, web upload, and digital distribution.</p>
+    
+      <AuthorBox />
     </ArticleWrapper>
   </>);
 }

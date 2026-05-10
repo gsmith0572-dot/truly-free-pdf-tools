@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import ArticleWrapper from "../../../components/blog/ArticleWrapper";
+import AuthorBox from "@/components/blog/AuthorBox";
 export const metadata: Metadata = { title: "Best Free PDF Tools 2026: No Daily Limits, No Subscription, No Upload", description: "An honest comparison of the best free PDF tools in 2026. We tested compress, merge, split, and convert operations across Smallpdf, iLovePDF, PDF24, and browser-based alternatives.", alternates: { canonical: "https://trulyfreetools.com/blog/best-free-pdf-tools-2026" } };
 export default function BestFreePDFTools2026Page() {
   const s = { "@context": "https://schema.org", "@type": "Article", headline: "Best Free PDF Tools 2026: No Daily Limits, No Subscription, No Upload", datePublished: "2026-05-05", dateModified: "2026-05-05", author: { "@type": "Organization", name: "TrulyFreeTools" }, publisher: { "@type": "Organization", name: "TrulyFreeTools", url: "https://trulyfreetools.com" }, mainEntityOfPage: "https://trulyfreetools.com/blog/best-free-pdf-tools-2026" };
@@ -48,6 +49,8 @@ export default function BestFreePDFTools2026Page() {
       <p>For compression without file uploads, TrulyFreeTools runs two compression passes locally and delivers the smaller result with no server transmission. For server-based compression where privacy is not a concern, iLovePDF and Smallpdf both produce good results within their free tier limits.</p>
       <h3>Can I merge PDF files for free without a watermark?</h3>
       <p>Yes. TrulyFreeTools, PDF24, and Smallpdf all merge PDFs without adding watermarks on their free tiers. Watermarks are typically applied only to format conversion outputs — PDF to Word, PDF to Excel — on free tiers.</p>
+    
+      <AuthorBox />
     </ArticleWrapper>
   </>);
 }

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import ArticleWrapper from "../../../components/blog/ArticleWrapper";
+import AuthorBox from "@/components/blog/AuthorBox";
 export const metadata: Metadata = { title: "How to Convert PDF to Word Free — No Email, No Upload, No Signup", description: "Convert PDF to Word for free in 2026 without giving your email address. Compare browser-based, desktop, and online methods. Honest notes on which PDFs convert well and which do not.", alternates: { canonical: "https://trulyfreetools.com/blog/pdf-to-word-free-no-email" } };
 export default function PDFToWordFreeNoEmail() {
   const s = { "@context": "https://schema.org", "@type": "Article", headline: "How to Convert PDF to Word Free — No Email, No Upload, No Signup", datePublished: "2026-05-05", dateModified: "2026-05-05", author: { "@type": "Organization", name: "TrulyFreeTools" }, publisher: { "@type": "Organization", name: "TrulyFreeTools", url: "https://trulyfreetools.com" }, mainEntityOfPage: "https://trulyfreetools.com/blog/pdf-to-word-free-no-email" };
@@ -53,6 +54,8 @@ export default function PDFToWordFreeNoEmail() {
       <p>Partially. Text content and basic formatting — headings, bold, italic, paragraph breaks — convert well. Complex elements like multi-column layouts, merged table cells, custom fonts, and precise image positioning require manual adjustment. No free converter achieves perfect formatting preservation for complex documents.</p>
       <h3>Can I convert a scanned PDF to Word for free?</h3>
       <p>Yes, using tools with OCR capability. Google Drive converts scanned PDFs automatically when opened as Google Docs. Microsoft Word with Microsoft 365 applies OCR when opening scanned PDFs directly. Browser-based tools without OCR, including TrulyFreeTools, work only with text-based PDFs and cannot convert scanned PDFs to editable text.</p>
+    
+      <AuthorBox />
     </ArticleWrapper>
   </>);
 }

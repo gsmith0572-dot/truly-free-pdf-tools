@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import ArticleWrapper from "../../../components/blog/ArticleWrapper";
+import AuthorBox from "@/components/blog/AuthorBox";
 
 export const metadata: Metadata = {
   title: "Alternativas a Smallpdf Gratis 2026 — Sin Limite de 2 Tareas Diarias",
@@ -60,7 +61,9 @@ export default function AlternativasSmallpdfGratis() {
         <p>Si. TrulyFreeTools no requiere cuenta, correo electronico ni registro para ninguna operacion. PDF24 tambien funciona sin cuenta.</p>
         <h3>Hay alguna alternativa a Smallpdf que no suba mis archivos?</h3>
         <p>Si. TrulyFreeTools procesa todas las operaciones PDF localmente en tu navegador usando WebAssembly. Tu archivo nunca sale de tu dispositivo. Todas las demas herramientas PDF web principales, incluyendo Smallpdf e iLovePDF, suben archivos a servidores remotos.</p>
-      </ArticleWrapper>
+      
+      <AuthorBox />
+    </ArticleWrapper>
     </>
   );
 }

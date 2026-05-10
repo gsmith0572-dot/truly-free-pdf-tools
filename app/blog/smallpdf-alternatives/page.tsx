@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import ArticleWrapper from "../../../components/blog/ArticleWrapper";
+import AuthorBox from "@/components/blog/AuthorBox";
 export const metadata: Metadata = { title: "Best Smallpdf Alternatives in 2026 — Free, No Daily Limits", description: "Hit the Smallpdf 2-task daily limit? These free Smallpdf alternatives have no daily caps, no watermarks, and no file uploads. Full comparison with real usage limits.", alternates: { canonical: "https://trulyfreetools.com/blog/smallpdf-alternatives" } };
 export default function SmallpdfAlternativesPage() {
   const s = { "@context": "https://schema.org", "@type": "Article", headline: "Best Smallpdf Alternatives in 2026 — Free, No Daily Limits", datePublished: "2026-05-05", dateModified: "2026-05-05", author: { "@type": "Organization", name: "TrulyFreeTools" }, publisher: { "@type": "Organization", name: "TrulyFreeTools", url: "https://trulyfreetools.com" }, mainEntityOfPage: "https://trulyfreetools.com/blog/smallpdf-alternatives" };
@@ -50,6 +51,8 @@ export default function SmallpdfAlternativesPage() {
       <p>Yes. TrulyFreeTools requires no account, no email, and no registration for any operation. PDF24 also works without an account for all tools.</p>
       <h3>Is there a Smallpdf alternative that does not upload my files?</h3>
       <p>Yes. TrulyFreeTools processes all PDF operations locally in your browser — compress, merge, split, PDF to Word, and password removal — using WebAssembly. Your file never leaves your device. All other major web-based PDF tools upload files to remote servers.</p>
+    
+      <AuthorBox />
     </ArticleWrapper>
   </>);
 }

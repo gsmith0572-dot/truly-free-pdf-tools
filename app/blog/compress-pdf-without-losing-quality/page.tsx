@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import ArticleWrapper from "../../../components/blog/ArticleWrapper";
+import AuthorBox from "@/components/blog/AuthorBox";
 
 export const metadata: Metadata = {
   title: "How to Compress a PDF Without Losing Quality — Free, No Upload Required",
@@ -87,7 +88,9 @@ export default function CompressPDFQualityPage() {
         <p>Text-only PDFs typically compress 20 to 40 percent through structural optimization. Image-heavy PDFs can compress 60 to 90 percent when images are resampled at lower resolution. PDFs that have already been compressed aggressively may see little to no additional reduction.</p>
         <h3>Does compressing a PDF reduce text quality?</h3>
         <p>No. Text in PDFs is stored as vector data, not as raster pixels, so compression operations do not affect text sharpness or readability regardless of compression level. Only embedded images are affected by compression.</p>
-      </ArticleWrapper>
+      
+      <AuthorBox />
+    </ArticleWrapper>
     </>
   );
 }
